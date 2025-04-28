@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CarRepairController {
 
-	@Autowired
-	private CarRepairShopDAO carRepairShopDAO;
 	private final RestTemplate restTemplate;
 
 	@GetMapping("/searchRepairShop")
@@ -44,19 +42,5 @@ public class CarRepairController {
 
 		return "search"; // search.jsp
 	}
-	    @GetMapping
-    public List<CarRepairShopDTO> getAllRepairShops() {
-        return carRepairShopDAO.getAllRepairShops();
-    }
-    
-    @GetMapping("/api/repairshops")
-    public List<CarRepairShopDTO> getRepairShopsInBounds(
-            @RequestParam double swLat,
-            @RequestParam double swLng,
-            @RequestParam double neLat,
-            @RequestParam double neLng) {
-
-        return carRepairShopDAO.getRepairShopsInBounds(swLat, swLng, neLat, neLng);
-    }
 
 }
