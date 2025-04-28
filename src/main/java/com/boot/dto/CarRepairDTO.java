@@ -2,7 +2,7 @@ package com.boot.dto;
 
 import lombok.Data;
 
-public class CarRepairShopDTO {
+public class CarRepairDTO {
 	
 	@Data
 	public class RepairShopDTO {

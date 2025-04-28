@@ -1,7 +1,5 @@
 package com.boot.controller;
 
-import java.net.URLEncoder;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class CarRepairShopController {
+public class CarRepairController {
 
 	private final RestTemplate restTemplate;
 
@@ -23,12 +21,14 @@ public class CarRepairShopController {
 		log.info("@# searchRepairShop");
 		try {
 			
-			String serviceKey = "5LHvB05cdWMw+4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy/IcuS/+hwZ8SU3fpKSaqEif4Q==";
-			String apiUrl = "api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api" +
-							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
-							"&pageNo=1" +
-			                "&numOfRows=10" +
-			                "&type=json";
+			String serviceKey = "5LHvB05cdWMw%2B4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy%2FIcuS%2F%2BhwZ8SU3fpKSaqEif4Q%3D%3D";
+			String apiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api"+
+//							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
+							"?serviceKey="+serviceKey+
+							"&pageNo=1"+
+			                "&numOfRows=100"+
+			                "&type=xml";
+			
 	
 			// API 호출
 			String response = restTemplate.getForObject(apiUrl, String.class);
