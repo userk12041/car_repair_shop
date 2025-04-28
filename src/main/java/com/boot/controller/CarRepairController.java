@@ -1,5 +1,9 @@
 package com.boot.controller;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,25 +25,45 @@ public class CarRepairController {
 		log.info("@# searchRepairShop");
 		try {
 			
+			//Encoding 버전
 			String serviceKey = "5LHvB05cdWMw%2B4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy%2FIcuS%2F%2BhwZ8SU3fpKSaqEif4Q%3D%3D";
-			String apiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api"+
-//							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
-							"?serviceKey="+serviceKey+
-							"&pageNo=1"+
-			                "&numOfRows=100"+
-			                "&type=xml";
+			//Decoding 버전
+//			String serviceKey = "5LHvB05cdWMw+4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy/IcuS/+hwZ8SU3fpKSaqEif4Q==";
 			
+//			String apiUrl = "https://jsonplaceholder.typicode.com/posts"; //무료 테스트 API
+			String apiUrl = "https://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api" +
+//							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
+							"?serviceKey=" + serviceKey +
+							"&pageNo=1" +
+			                "&numOfRows=100" +
+			                "&type=xml";
+	
 	
 			// API 호출
-			String response = restTemplate.getForObject(apiUrl, String.class);
+//			String response = restTemplate.getForObject(apiUrl, String.class);
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("User-Agent", "Mozilla/5.0");
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			
+			headers.add("Accept", "application/xml");  // ★ 추가!			
+
+			ResponseEntity<String> response = restTemplate.exchange(
+				apiUrl,
+				HttpMethod.GET,
+				entity,
+				String.class
+			);			
+			
 	
 			// 전체 JSON 문자열 그대로 넘기는 테스트
-			model.addAttribute("apiResult", response);
+			model.addAttribute("apiResult", response.getBody());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		return "search"; // search.jsp
 	}
 
