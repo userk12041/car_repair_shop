@@ -1,5 +1,7 @@
 package com.boot.controller;
 
+import java.net.URLEncoder;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,7 +33,7 @@ public class CarRepairController {
 //			String serviceKey = "5LHvB05cdWMw+4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy/IcuS/+hwZ8SU3fpKSaqEif4Q==";
 			
 //			String apiUrl = "https://jsonplaceholder.typicode.com/posts"; //무료 테스트 API
-			String apiUrl = "https://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api" +
+			String apiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api" +
 //							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
 							"?serviceKey=" + serviceKey +
 							"&pageNo=1" +
@@ -43,7 +45,19 @@ public class CarRepairController {
 //			String response = restTemplate.getForObject(apiUrl, String.class);
 			
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("User-Agent", "Mozilla/5.0");
+//			headers.add("User-Agent", "Mozilla/5.0");
+			
+			headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
+			headers.add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
+			headers.add("Accept-Encoding", "gzip, deflate, br");
+			headers.add("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+			headers.add("Connection", "keep-alive");
+			headers.add("Upgrade-Insecure-Requests", "1");
+			headers.add("Sec-Fetch-Dest", "document");
+			headers.add("Sec-Fetch-Mode", "navigate");
+			headers.add("Sec-Fetch-Site", "none");
+			headers.add("Accept-Charset", "UTF-8"); // 추가로 붙이면 안정성 더 좋음
+			
 
 			HttpEntity<String> entity = new HttpEntity<>(headers);
 			
