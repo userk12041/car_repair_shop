@@ -15,11 +15,6 @@ public class CarRepairServiceImpl implements CarRepairService {
 	private CarRepairDAO carRepairDAO;
 
 	@Override	//25.04.29 권준우
-	public List<CarRepairDTO> getAllShops() {
-		return carRepairDAO.findAll();
-	}
-
-	@Override	//25.04.29 권준우
 	public List<CarRepairDTO> searchByName(String name) {
 		return carRepairDAO.findByName(name);
 	}
@@ -32,5 +27,11 @@ public class CarRepairServiceImpl implements CarRepairService {
 	@Override	//25.04.29 권준우
 	public int deleteShop(int id) {
 		return carRepairDAO.deleteRepairShop(id);
+	}
+
+	@Override
+	public List<CarRepairDTO> getPagedShops(int pageNo, int pageSize) {
+		int startRow = (pageNo - 1) * pageSize; // ex) 2페이지면 (2-1) * 20 = 20
+		return carRepairDAO.findAllPaged(startRow, pageSize);
 	}
 }
