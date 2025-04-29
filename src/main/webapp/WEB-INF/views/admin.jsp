@@ -1,0 +1,61 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+<head>
+	<title>관리자 - 자동차 정비소 관리</title>
+</head>
+<body>
+
+<h1>자동차 정비소 리스트 (관리자용)</h1>
+
+<!-- 검색 폼 -->
+<form action="/admin/repairShop/search" method="get">
+	<input type="text" name="name" placeholder="정비소 이름 검색">
+	<button type="submit">검색</button>
+</form>
+
+<br>
+
+<!-- 정비소 리스트 테이블 -->
+<table border="1" cellpadding="10" cellspacing="0">
+	<tr>
+		<th>번호</th>
+		<th>정비소 이름</th>
+		<th>도로명 주소</th>
+		<th>지번 주소</th>
+		<th>등록일자</th>
+		<th>운영 시작시간</th>
+		<th>운영 종료시간</th>
+		<th>전화번호</th>
+		<th>수정</th>
+		<th>삭제</th>
+	</tr>
+
+	<c:forEach var="shop" items="${list}">
+	<tr>
+		<td>${shop.id}</td>
+		<td>${shop.name}</td>
+		<td>${shop.roadaddress}</td>
+		<td>${shop.lotaddress}</td>
+		<td>${shop.registration_date}</td>
+		<td>${shop.opentime}</td>
+		<td>${shop.closetime}</td>
+		<td>${shop.telnumber}</td>
+		<td><a href="/admin/repairShop/updateForm?id=${shop.id}">수정</a></td>
+		<td><a href="/admin/repairShop/delete?id=${shop.id}">삭제</a></td>
+	</tr>
+	</c:forEach>
+
+</table>
+
+<br>
+
+<!-- 페이징 버튼 -->
+<div>
+	<c:forEach var="i" begin="1" end="10">
+		<a href="/admin/repairShop/list?page=${i}">${i}</a>
+	</c:forEach>
+</div>
+
+</body>
+</html>

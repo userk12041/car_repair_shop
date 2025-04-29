@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.boot.dto.CarRepairDTO;
 import com.boot.service.CarRepairService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class CarRepairAdminController {
 
 	@Autowired
@@ -21,6 +24,8 @@ public class CarRepairAdminController {
 	// 전체 조회
 	@GetMapping("/admin/repairShop/list")
 	public String listRepairShops(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+		log.info("@# listRepairShops");
+		
 		int pageSize = 20; // 한 페이지당 20개
 		List<CarRepairDTO> list = carRepairService.getPagedShops(page, pageSize);
 		model.addAttribute("list", list);
@@ -40,6 +45,8 @@ public class CarRepairAdminController {
 	// 이름으로 검색
 	@GetMapping("/admin/repairShop/search")
 	public String searchRepairShops(@RequestParam("name") String name, Model model) {
+		log.info("@# searchRepairShops");
+		
 		List<CarRepairDTO> list = carRepairService.searchByName(name);
 		model.addAttribute("list", list);
 		return "admin/repairShop/list"; // 검색 결과도 list.jsp로 보여줄거야
@@ -48,6 +55,8 @@ public class CarRepairAdminController {
 	// 수정 (폼으로부터 POST 요청 받는다고 가정)
 	@PostMapping("/admin/repairShop/update")
 	public String updateRepairShop(CarRepairDTO dto) {
+		log.info("@# updateRepairShops");
+		
 		carRepairService.updateShop(dto);
 		return "redirect:/admin/repairShop/list"; // 수정 후 목록으로 리다이렉트
 	}
@@ -55,6 +64,8 @@ public class CarRepairAdminController {
 	// 삭제
 	@GetMapping("/admin/repairShop/delete")
 	public String deleteRepairShop(@RequestParam("id") int id) {
+		log.info("@# deleteRepairShops");
+		
 		carRepairService.deleteShop(id);
 		return "redirect:/admin/repairShop/list"; // 삭제 후 목록으로 리다이렉트
 	}
