@@ -2,8 +2,11 @@ package com.boot.controller;
 
 import java.util.HashMap;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,4 +67,32 @@ public class UserController {
     public String LoginForm() {
         return "login"; // login.jsp 파일명 (확장자 생략 가능)
     }
+    
+    @PostMapping("/login_yn")
+    public String loginCheck(@RequestParam String user_id,
+                             @RequestParam String password,
+                             HttpSession session,
+                             Model model) {
+        UserDTO user = userService.login(user_id, password);
+        
+        
+        if (user != null) {
+        	log.info("@# user 객체 => " + user);
+        	log.info("@# user.getUserId() => " + user.getUserId());
+
+            session.setAttribute("loginId", user.getUserId());
+            log.info("@# session loginId=>"+session.getAttribute("loginId"));
+            return "redirect:/map";  // main.jsp 매핑
+        } else {
+            model.addAttribute("loginError", "아이디 또는 비밀번호가 틀렸습니다.");
+            return "login";  // 다시 로그인 페이지로
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/map";
+    }
+
 }

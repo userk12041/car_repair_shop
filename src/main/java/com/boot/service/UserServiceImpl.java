@@ -15,7 +15,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void register(UserDTO userDTO) {
         UserDAO userDao = sqlSession.getMapper(UserDAO.class);
-        // 비밀번호 암호화 **제외**
         userDao.register(userDTO);		
 	}
+	
+	@Override
+	public UserDTO login(String userId, String password) {
+	    UserDAO userDao = sqlSession.getMapper(UserDAO.class);
+	    UserDTO user = userDao.findByUserId(userId);
+
+	    if (user != null && user.getPassword().equals(password)) {
+	        return user;
+	    }
+	    return null;
+	}
+
 }
