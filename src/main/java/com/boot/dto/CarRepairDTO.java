@@ -5,14 +5,19 @@ import lombok.Data;
 public class CarRepairDTO {
 	
 	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
 	public class RepairShopDTO {
-		private Integer id;
+	    	private int id;
+		
 		private String name;
-		private String roadAddress;
-		private String lotAddress;
-		private String telNumber;
-		private String registrationDate;
-		private String openTime;
-		private String closeTime;
+		private String roadaddress;
+		private String lotaddress;
+		private String latitude;
+		private String longitude;
+		private String registration_date;
+		private String opentime;
+		private String closetime;	
+		private String telnumber;	
 	}
 }
