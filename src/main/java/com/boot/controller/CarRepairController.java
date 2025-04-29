@@ -83,4 +83,8 @@ public class CarRepairController {
 	public String mapPage() {
 		return "map";  // /WEB-INF/views/map.jsp 로 이동
 	}
+	@GetMapping("/main")
+	public String mainPage() {
+		return "main";  
+	}
 }

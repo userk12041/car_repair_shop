@@ -82,7 +82,7 @@ public class UserController {
 
             session.setAttribute("loginId", user.getUserId());
             log.info("@# session loginId=>"+session.getAttribute("loginId"));
-            return "redirect:/map";  // main.jsp 매핑
+            return "redirect:/main";  // main.jsp 매핑
         } else {
             model.addAttribute("loginError", "아이디 또는 비밀번호가 틀렸습니다.");
             return "login";  // 다시 로그인 페이지로
@@ -92,7 +92,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/map";
+        return "redirect:/main";
     }
 
 }
