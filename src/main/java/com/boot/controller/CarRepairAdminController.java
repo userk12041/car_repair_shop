@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,7 +40,7 @@ public class CarRepairAdminController {
 		List<CarRepairDTO> list = carRepairService.getAllShops();
 		model.addAttribute("list", list);
 		return "admin/repairShop/list"; // => /WEB-INF/views/admin/repairShop/list.jsp
-	}
+	}	
 */
 	
 	// 이름으로 검색
@@ -58,7 +59,18 @@ public class CarRepairAdminController {
 		log.info("@# updateRepairShops");
 		
 		carRepairService.updateShop(dto);
-		return "redirect:/admin/repairShop/list"; // 수정 후 목록으로 리다이렉트
+		return "redirect:/admin/repairShop/list?updateSuccess=true"; // 수정 후 목록으로 리다이렉트
+	}
+	
+	// 수정 페이지로 이동
+	@GetMapping("/admin/repairShop/edit")
+	public String editRepairShop(@RequestParam("id") int id, Model model) {
+		log.info("@# editRepairShop 호출됨, id = " + id);
+
+		CarRepairDTO repairShop = carRepairService.getRepairShopById(id);
+		model.addAttribute("repairShop", repairShop);
+
+		return "admin_edit"; // => /WEB-INF/views/admin_edit.jsp
 	}
 
 	// 삭제

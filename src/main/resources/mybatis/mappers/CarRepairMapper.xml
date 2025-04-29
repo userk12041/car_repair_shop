@@ -18,6 +18,13 @@
 		SELECT * FROM repair_shop
 		WHERE name LIKE CONCAT('%', #{name}, '%')
 	</select>
+	
+	
+	<!-- 조건부 조회 (ID 검색) -->
+	<select id="findById" resultType="com.boot.dto.CarRepairDTO">
+		SELECT * FROM repair_shop
+		WHERE id = #{id}
+	</select>
 
 	<!-- 수정 -->
 	<update id="updateRepairShop" parameterType="com.boot.dto.CarRepairDTO">
@@ -32,6 +39,7 @@
 			tel_number = #{telnumber}
 		WHERE id = #{id}
 	</update>
+
 
 	<!-- 삭제 -->
 	<delete id="deleteRepairShop" parameterType="int">

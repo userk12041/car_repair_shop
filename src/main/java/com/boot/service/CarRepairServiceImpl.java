@@ -34,4 +34,9 @@ public class CarRepairServiceImpl implements CarRepairService {
 		int startRow = (pageNo - 1) * pageSize; // ex) 2페이지면 (2-1) * 20 = 20
 		return carRepairDAO.findAllPaged(startRow, pageSize);
 	}
+	
+	@Override
+	public CarRepairDTO getRepairShopById(int id) {
+		return carRepairDAO.findById(id);
+	}	
 }

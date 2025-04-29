@@ -41,7 +41,7 @@
 		<td>${shop.opentime}</td>
 		<td>${shop.closetime}</td>
 		<td>${shop.telnumber}</td>
-		<td><a href="/admin/repairShop/updateForm?id=${shop.id}">수정</a></td>
+		<td><a href="/admin/repairShop/edit?id=${shop.id}">수정</a></td>
 		<td><a href="/admin/repairShop/delete?id=${shop.id}">삭제</a></td>
 	</tr>
 	</c:forEach>
@@ -56,6 +56,13 @@
 		<a href="/admin/repairShop/list?page=${i}">${i}</a>
 	</c:forEach>
 </div>
+
+<c:if test="${param.updateSuccess == 'true'}">
+	<script>
+		alert('정비소 정보가 수정되었습니다.');
+		history.replaceState({}, null, location.pathname);
+	</script>
+</c:if>
 
 </body>
 </html>
