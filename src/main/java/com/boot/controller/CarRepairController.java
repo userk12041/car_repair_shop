@@ -66,5 +66,8 @@ public class CarRepairController {
 		
 		return "search"; // search.jsp
 	}
-
+	@GetMapping("/map")
+	public String mapPage() {
+		return "map";  // /WEB-INF/views/map.jsp 로 이동
+	}
 }
