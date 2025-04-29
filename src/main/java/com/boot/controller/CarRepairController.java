@@ -1,7 +1,5 @@
 package com.boot.controller;
 
-import java.net.URLEncoder;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,18 +26,19 @@ public class CarRepairController {
 		try {
 			
 			//Encoding 버전
-			String serviceKey = "5LHvB05cdWMw%2B4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy%2FIcuS%2F%2BhwZ8SU3fpKSaqEif4Q%3D%3D";
+//			String serviceKey2 = "5LHvB05cdWMw%2B4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy%2FIcuS%2F%2BhwZ8SU3fpKSaqEif4Q%3D%3D";
 			//Decoding 버전
 //			String serviceKey = "5LHvB05cdWMw+4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy/IcuS/+hwZ8SU3fpKSaqEif4Q==";
+			String serviceKey = "dyX6xt1gN2bRdwZi9wnVBU02Xl2/snngu69mYzVxO0mZvFhMzo96NIfl61okMnKATxRS17HNXksMcehLaLd8FA==";
 			
 //			String apiUrl = "https://jsonplaceholder.typicode.com/posts"; //무료 테스트 API
 			String apiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api" +
 //							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
 							"?serviceKey=" + serviceKey +
 							"&pageNo=1" +
-			                "&numOfRows=100" +
-			                "&type=xml";
-	
+							"&numOfRows=100" +
+							"&type=xml";
+			
 	
 			// API 호출
 //			String response = restTemplate.getForObject(apiUrl, String.class);
