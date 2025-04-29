@@ -23,7 +23,10 @@ public class CarRepairAdminController {
 
 	// 전체 조회 (페이지 + 페이징 블럭 처리)
 	@GetMapping("/admin/repairShop/list")
-	public String listRepairShops(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	public String listRepairShops(@RequestParam(value = "page", defaultValue = "1") int page,
+									@RequestParam(value = "sortField", defaultValue = "id") String sortField,
+									@RequestParam(value = "order", defaultValue = "asc") String order,
+									Model model) {
 		log.info("@# listRepairShops");
 
 		int pageSize = 20; // 한 페이지에 보여줄 데이터 수
@@ -31,7 +34,8 @@ public class CarRepairAdminController {
 		int totalPage = (int) Math.ceil((double) totalCount / pageSize);
 
 		// 현재 페이지 기준 데이터 조회
-		List<CarRepairDTO> list = carRepairService.getPagedShops(page, pageSize);
+//		List<CarRepairDTO> list = carRepairService.getPagedShops(page, pageSize);
+		List<CarRepairDTO> list = carRepairService.getPagedShopsSorted(sortField, order, page, pageSize);
 
 		// 페이지 블럭 계산
 		int pageBlock = 10; // 한 번에 보여줄 페이지 수
@@ -48,6 +52,8 @@ public class CarRepairAdminController {
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("hasPrev", hasPrev);
 		model.addAttribute("hasNext", hasNext);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("order", order);
 
 		return "admin"; // => admin.jsp
 	}
@@ -91,4 +97,21 @@ public class CarRepairAdminController {
 		carRepairService.deleteShop(id);
 		return "redirect:/admin/repairShop/list?page=" + page + "&deleteSuccess=true"; // 삭제 후 목록으로 리다이렉트
 	}
+	
+	// 정렬
+	@GetMapping("/admin/repairShop/sort")
+	public String sortRepairShops(@RequestParam(value = "sortField", defaultValue = "id") String sortField,
+	                              @RequestParam(value = "order", defaultValue = "asc") String order,
+	                              @RequestParam(value = "page", defaultValue = "1") int page,
+	                              Model model) {
+
+		int pageSize = 20;
+		List<CarRepairDTO> list = carRepairService.getPagedShopsSorted(sortField, order, page, pageSize);
+
+		model.addAttribute("list", list);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("order", order);
+		return "admin";
+	}	
 }

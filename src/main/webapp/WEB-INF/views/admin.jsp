@@ -15,6 +15,12 @@
 </form>
 
 <br>
+<a href="/admin/repairShop/list?sortField=registration_date&order=desc">등록일 ↓</a>
+<a href="/admin/repairShop/list?sortField=registration_date&order=asc">등록일 ↑</a>
+<a href="/admin/repairShop/list?sortField=name&order=asc">정비소명 ↑</a>
+<a href="/admin/repairShop/list?sortField=name&order=desc">정비소명 ↓</a>
+<br>
+<br>
 
 <!-- 정비소 리스트 테이블 -->
 <table border="1" cellpadding="10" cellspacing="0">

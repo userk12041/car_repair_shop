@@ -26,4 +26,8 @@ public interface CarRepairDAO {
 	int updateRepairShop(CarRepairDTO dto);
 	int deleteRepairShop(int id);
 	int countShops();
+	List<CarRepairDTO> findAllPagedSorted(@Param("sortField") String sortField,
+            @Param("order") String order,
+            @Param("startRow") int startRow,
+            @Param("rowCount") int rowCount);
 }

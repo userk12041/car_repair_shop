@@ -10,7 +10,9 @@ public interface CarRepairService {
 	List<CarRepairDTO> getPagedShops(int pageNo, int pageSize);	// 정비소 조회(페이징 처리)
 	List<CarRepairDTO> searchByName(String name);	// 정비소 이름으로 조회
 	CarRepairDTO getRepairShopById(int id);	// 특정 정비소 1개 조회
+	List<CarRepairDTO> getPagedShopsSorted(String sortField, String order, int page, int pageSize); // 정렬
 	int updateShop(CarRepairDTO dto);
 	int deleteShop(int id);
 	int getTotalCount();
+	
 }

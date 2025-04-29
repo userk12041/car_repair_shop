@@ -44,4 +44,10 @@ public class CarRepairServiceImpl implements CarRepairService {
 	public int getTotalCount() {
 		return carRepairDAO.countShops();
 	}
+	
+	@Override	//25.04.29 권준우
+	public List<CarRepairDTO> getPagedShopsSorted(String sortField, String order, int page, int pageSize) {
+		int startRow = (page - 1) * pageSize;
+		return carRepairDAO.findAllPagedSorted(sortField, order, startRow, pageSize);
+	}
 }
