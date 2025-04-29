@@ -31,12 +31,12 @@
 		UPDATE repair_shop
 		SET 
 			name = #{name},
-			road_address = #{roadaddress},
-			lot_address = #{lotaddress},
+			road_address = #{road_address},
+			lot_address = #{lot_address},
 			registration_date = #{registration_date},
-			open_time = #{opentime},
-			close_time = #{closetime},
-			tel_number = #{telnumber}
+			open_time = #{open_time},
+			close_time = #{close_time},
+			tel_number = #{tel_number}
 		WHERE id = #{id}
 	</update>
 

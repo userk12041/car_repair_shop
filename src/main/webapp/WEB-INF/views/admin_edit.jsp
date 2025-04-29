@@ -18,11 +18,11 @@
 		</tr>
 		<tr>
 			<th>도로명 주소</th>
-			<td><input type="text" name="roadaddress" value="${repairShop.roadaddress}"></td>
+			<td><input type="text" name="roadaddress" value="${repairShop.road_address}"></td>
 		</tr>
 		<tr>
 			<th>지번 주소</th>
-			<td><input type="text" name="lotaddress" value="${repairShop.lotaddress}"></td>
+			<td><input type="text" name="lotaddress" value="${repairShop.lot_address}"></td>
 		</tr>
 		<tr>
 			<th>등록일자</th>
@@ -30,15 +30,15 @@
 		</tr>
 		<tr>
 			<th>운영 시작시간</th>
-			<td><input type="text" name="opentime" value="${repairShop.opentime}"></td>
+			<td><input type="text" name="opentime" value="${repairShop.open_time}"></td>
 		</tr>
 		<tr>
 			<th>운영 종료시간</th>
-			<td><input type="text" name="closetime" value="${repairShop.closetime}"></td>
+			<td><input type="text" name="closetime" value="${repairShop.close_time}"></td>
 		</tr>
 		<tr>
 			<th>전화번호</th>
-			<td><input type="text" name="telnumber" value="${repairShop.telnumber}"></td>
+			<td><input type="text" name="telnumber" value="${repairShop.tel_number}"></td>
 		</tr>
 	</table>
 

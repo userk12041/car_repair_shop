@@ -29,13 +29,13 @@ public class CarRepairServiceImpl implements CarRepairService {
 		return carRepairDAO.deleteRepairShop(id);
 	}
 
-	@Override
+	@Override	//25.04.29 권준우
 	public List<CarRepairDTO> getPagedShops(int pageNo, int pageSize) {
 		int startRow = (pageNo - 1) * pageSize; // ex) 2페이지면 (2-1) * 20 = 20
 		return carRepairDAO.findAllPaged(startRow, pageSize);
 	}
 	
-	@Override
+	@Override	//25.04.29 권준우
 	public CarRepairDTO getRepairShopById(int id) {
 		return carRepairDAO.findById(id);
 	}	
