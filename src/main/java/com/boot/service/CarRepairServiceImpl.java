@@ -38,5 +38,10 @@ public class CarRepairServiceImpl implements CarRepairService {
 	@Override	//25.04.29 권준우
 	public CarRepairDTO getRepairShopById(int id) {
 		return carRepairDAO.findById(id);
-	}	
+	}
+	
+	@Override	//25.04.29 권준우
+	public int getTotalCount() {
+		return carRepairDAO.countShops();
+	}
 }

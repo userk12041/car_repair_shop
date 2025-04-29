@@ -10,6 +10,7 @@
 
 <form action="/admin/repairShop/update" method="post">
 	<input type="hidden" name="id" value="${repairShop.id}" />
+	<input type="hidden" name="page" value="${currentPage}" />
 	
 	<table border="1">
 		<tr>
@@ -44,7 +45,9 @@
 
 	<br/>
 	<button type="submit">수정 완료</button>
-	<a href="/admin/repairShop/list"><button type="button">취소</button></a>
+	<a href="/admin/repairShop/list?page=${currentPage}">
+		<button type="button">취소</button>
+	</a>
 
 </form>
 

@@ -41,8 +41,9 @@
 		<td>${shop.open_time}</td>
 		<td>${shop.close_time}</td>
 		<td>${shop.tel_number}</td>
-		<td><a href="/admin/repairShop/edit?id=${shop.id}">수정</a></td>
-		<td><a href="/admin/repairShop/delete?id=${shop.id}">삭제</a></td>
+		<td><a href="/admin/repairShop/edit?id=${shop.id}&page=${currentPage}">수정</a></td>
+<!--		<td><a href="/admin/repairShop/delete?id=${shop.id}">삭제</a></td>-->
+		<td><a href="/admin/repairShop/delete?id=${shop.id}&page=${currentPage}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a></td>
 	</tr>
 	</c:forEach>
 
@@ -50,16 +51,47 @@
 
 <br>
 
+<!-- 이전 블럭 화살표 -->
+<c:if test="${hasPrev}">
+	<a href="?page=${startPage - 1}">&lt;</a>
+</c:if>
+
+<!-- 페이지 번호 -->
+<c:forEach var="i" begin="${startPage}" end="${endPage}">
+	<c:choose>
+		<c:when test="${i == currentPage}">
+			<strong>[${i}]</strong>
+		</c:when>
+		<c:otherwise>
+			<a href="?page=${i}">${i}</a>
+		</c:otherwise>
+	</c:choose>
+</c:forEach>
+
+<!-- 다음 블럭 화살표 -->
+<c:if test="${hasNext}">
+	<a href="?page=${endPage + 1}">&gt;</a>
+</c:if>
+
+
 <!-- 페이징 버튼 -->
-<div>
-	<c:forEach var="i" begin="1" end="10">
-		<a href="/admin/repairShop/list?page=${i}">${i}</a>
-	</c:forEach>
-</div>
+<!--<div>-->
+<!--	<c:forEach var="i" begin="1" end="10">-->
+<!--		<a href="/admin/repairShop/list?page=${i}">${i}</a>-->
+<!--	</c:forEach>-->
+<!--</div>-->
+
 
 <c:if test="${param.updateSuccess == 'true'}">
 	<script>
 		alert('정비소 정보가 수정되었습니다.');
+		history.replaceState({}, null, location.pathname);
+	</script>
+</c:if>
+
+<c:if test="${param.deleteSuccess == 'true'}">
+	<script>
+		alert('정비소 정보가 삭제되었습니다.');
 		history.replaceState({}, null, location.pathname);
 	</script>
 </c:if>

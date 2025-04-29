@@ -12,4 +12,5 @@ public interface CarRepairService {
 	CarRepairDTO getRepairShopById(int id);	// 특정 정비소 1개 조회
 	int updateShop(CarRepairDTO dto);
 	int deleteShop(int id);
+	int getTotalCount();
 }

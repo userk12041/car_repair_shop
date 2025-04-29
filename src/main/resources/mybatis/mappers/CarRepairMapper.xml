@@ -5,7 +5,7 @@
 
 <mapper namespace="com.boot.dao.CarRepairDAO">
 
-	<!-- 전체 조회(페이징) -->
+	<!-- 전체 조회(페이징) 25.04.29 권준우 -->
 	<select id="findAllPaged" resultType="com.boot.dto.CarRepairDTO">
 		SELECT * FROM repair_shop
 		ORDER BY id
@@ -13,20 +13,20 @@
 	</select>
 
 
-	<!-- 조건부 조회 (이름 검색) -->
+	<!-- 조건부 조회 (이름 검색) 25.04.29 권준우 -->
 	<select id="findByName" parameterType="String" resultType="com.boot.dto.CarRepairDTO">
 		SELECT * FROM repair_shop
 		WHERE name LIKE CONCAT('%', #{name}, '%')
 	</select>
 	
 	
-	<!-- 조건부 조회 (ID 검색) -->
+	<!-- 조건부 조회 (ID 검색) 25.04.29 권준우 -->
 	<select id="findById" resultType="com.boot.dto.CarRepairDTO">
 		SELECT * FROM repair_shop
 		WHERE id = #{id}
 	</select>
 
-	<!-- 수정 -->
+	<!-- 수정 25.04.29 권준우 -->
 	<update id="updateRepairShop" parameterType="com.boot.dto.CarRepairDTO">
 		UPDATE repair_shop
 		SET 
@@ -41,11 +41,17 @@
 	</update>
 
 
-	<!-- 삭제 -->
+	<!-- 삭제 25.04.29 권준우 -->
 	<delete id="deleteRepairShop" parameterType="int">
 		DELETE FROM repair_shop
 		WHERE id = #{id}
 	</delete>
+		
+	<!-- 페이징 처리에 필요 25.04.29 권준우 -->
+	<select id="countShops" resultType="int">
+		SELECT COUNT(*) FROM repair_shop
+	</select>
+    
     
     <select id="getAllCarRepairs" resultType="com.boot.dto.CarRepairDTO">
         SELECT 

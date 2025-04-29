@@ -19,10 +19,11 @@ public interface CarRepairDAO {
             @Param("neLng") double neLng
         );
     
-    //25.04.29 권준우 (메서드 4개)
+    //25.04.29 권준우
     List<CarRepairDTO> findAllPaged(@Param("startRow") int startRow, @Param("rowCount") int rowCount);
 	List<CarRepairDTO> findByName(String name);
 	CarRepairDTO findById(int id);
 	int updateRepairShop(CarRepairDTO dto);
 	int deleteRepairShop(int id);
+	int countShops();
 }
