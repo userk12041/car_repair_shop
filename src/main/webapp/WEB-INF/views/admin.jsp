@@ -35,12 +35,12 @@
 	<tr>
 		<td>${shop.id}</td>
 		<td>${shop.name}</td>
-		<td>${shop.roadaddress}</td>
-		<td>${shop.lotaddress}</td>
+		<td>${shop.road_address}</td>
+		<td>${shop.lot_address}</td>
 		<td>${shop.registration_date}</td>
-		<td>${shop.opentime}</td>
-		<td>${shop.closetime}</td>
-		<td>${shop.telnumber}</td>
+		<td>${shop.open_time}</td>
+		<td>${shop.close_time}</td>
+		<td>${shop.tel_number}</td>
 		<td><a href="/admin/repairShop/edit?id=${shop.id}">수정</a></td>
 		<td><a href="/admin/repairShop/delete?id=${shop.id}">삭제</a></td>
 	</tr>
