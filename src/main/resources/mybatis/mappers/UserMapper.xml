@@ -5,8 +5,11 @@
 <mapper namespace="com.boot.dao.UserDAO">
 
 	<insert id="register" parameterType="com.boot.dto.UserDTO">
-	    insert into user (user_id, password, nickname, email, phone_number, region)
+	    insert into user (userid, password, nickname, email, phone_number, region)
 	    values (#{userId}, #{password}, #{nickname}, #{email}, #{phoneNumber}, #{region})
 	</insert>
-    
+    <select id="findByUserId" parameterType="string" resultType="com.boot.dto.UserDTO">
+	    SELECT * FROM user WHERE userid = #{userId}
+	</select>
+
 </mapper>

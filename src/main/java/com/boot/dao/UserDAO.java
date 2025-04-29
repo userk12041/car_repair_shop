@@ -7,4 +7,5 @@ import com.boot.dto.UserDTO;
 @Mapper
 public interface UserDAO {
 	void register(UserDTO userDTO);
+	UserDTO findByUserId(String userId);
 }
