@@ -54,19 +54,27 @@
 	
 	<!-- 정렬 25.04.29 권준우 -->
 	<select id="findAllPagedSorted" resultType="com.boot.dto.CarRepairDTO">
-	SELECT * FROM repair_shop
-	ORDER BY
-		<choose>
-			<when test="sortField == 'registration_date'">registration_date</when>
-			<when test="sortField == 'name'">name</when>
-			<otherwise>id</otherwise>
-		</choose>
-		<choose>
-			<when test="order == 'desc'">DESC</when>
-			<otherwise>ASC</otherwise>
-		</choose>
-	LIMIT #{startRow}, #{rowCount}
+		SELECT * FROM repair_shop
+		ORDER BY
+			<choose>
+				<when test="sortField == 'registration_date'">registration_date</when>
+				<when test="sortField == 'name'">name</when>
+				<otherwise>id</otherwise>
+			</choose>
+			<choose>
+				<when test="order == 'desc'">DESC</when>
+				<otherwise>ASC</otherwise>
+			</choose>
+		LIMIT #{startRow}, #{rowCount}
 	</select>
+	
+	<!-- DB 저장 쿼리 -->
+	<insert id="insertShop" parameterType="com.boot.dto.CarRepairDTO">
+		INSERT INTO repair_shop
+		(name, road_address, lot_address, latitude, longitude, registration_date, open_time, close_time, tel_number)
+		VALUES
+		(#{name}, #{road_address}, #{lot_address}, #{latitude}, #{longitude}, #{registration_date}, #{open_time}, #{close_time}, #{tel_number})
+	</insert>		
     
     
     <select id="getAllCarRepairs" resultType="com.boot.dto.CarRepairDTO">

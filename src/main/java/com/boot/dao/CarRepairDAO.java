@@ -30,4 +30,6 @@ public interface CarRepairDAO {
             @Param("order") String order,
             @Param("startRow") int startRow,
             @Param("rowCount") int rowCount);
+	
+	void insertShop(CarRepairDTO dto);	// API -> DB 저장
 }

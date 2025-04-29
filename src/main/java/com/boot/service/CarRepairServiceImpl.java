@@ -50,4 +50,10 @@ public class CarRepairServiceImpl implements CarRepairService {
 		int startRow = (page - 1) * pageSize;
 		return carRepairDAO.findAllPagedSorted(sortField, order, startRow, pageSize);
 	}
+	
+	@Override	//25.04.29 권준우
+	public void insertShop(CarRepairDTO dto) {
+		carRepairDAO.insertShop(dto);
+	}
+	
 }
