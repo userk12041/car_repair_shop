@@ -46,5 +46,37 @@
 		DELETE FROM repair_shop
 		WHERE id = #{id}
 	</delete>
+    
+    <select id="getAllCarRepairs" resultType="com.boot.dto.CarRepairDTO">
+        SELECT 
+            id, 
+            name, 
+            road_address,
+            lot_address,
+            latitude,
+            longitude,
+            open_time,
+            close_time,
+            tel_number,
+            registration_date
+        FROM repair_shop
+    </select>
+    
+    <select id="getCarRepairInBounds" resultType="com.boot.dto.CarRepairDTO">
+    SELECT 
+        id,
+        name,
+        road_address,
+        lot_address,
+        latitude,
+        longitude,
+        registration_date,
+        open_time,
+        close_time,
+        tel_number
+   	   FROM repair_shop
+      WHERE latitude BETWEEN #{swLat} AND #{neLat}
+        AND longitude BETWEEN #{swLng} AND #{neLng}
+	</select>
 
 </mapper>

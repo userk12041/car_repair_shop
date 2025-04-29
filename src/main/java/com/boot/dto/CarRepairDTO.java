@@ -12,13 +12,13 @@ public class CarRepairDTO {
 	private int id;
 	
 	private String name;
-	private String roadaddress;
-	private String lotaddress;
+	private String road_address;
+	private String lot_address;
 	private String latitude;
 	private String longitude;
 	private String registration_date;
-	private String opentime;
-	private String closetime;	
-	private String telnumber;	
+	private String open_time;
+	private String close_time;	
+	private String tel_number;	
 	
 }
