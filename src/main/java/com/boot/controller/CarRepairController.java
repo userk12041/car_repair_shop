@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
+import com.boot.dto.CarRepairDTO;
+import com.boot.service.CarRepairService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,69 +22,72 @@ import lombok.extern.slf4j.Slf4j;
 public class CarRepairController {
 
 	private final RestTemplate restTemplate;
+	private final CarRepairService carRepairService;
 
-	@GetMapping("/searchRepairShop")
-	public String searchRepairShop(Model model) {
-		
-		log.info("@# searchRepairShop");
+	@GetMapping("/saveRepairShopData")
+	public String saveRepairShopData(Model model) {
+		log.info("@# saveRepairShopData 시작");
+
 		try {
-			
-			//Encoding 버전
-//			String serviceKey2 = "5LHvB05cdWMw%2B4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy%2FIcuS%2F%2BhwZ8SU3fpKSaqEif4Q%3D%3D";
-			//Decoding 버전
-//			String serviceKey = "5LHvB05cdWMw+4axztYINRKf23z525pOvkVo4Z4fI0XIT8fsSc0zX6Qm9SFhy/IcuS/+hwZ8SU3fpKSaqEif4Q==";
-			String serviceKey = "dyX6xt1gN2bRdwZi9wnVBU02Xl2/snngu69mYzVxO0mZvFhMzo96NIfl61okMnKATxRS17HNXksMcehLaLd8FA==";
-			
-//			String apiUrl = "https://jsonplaceholder.typicode.com/posts"; //무료 테스트 API
-			String apiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api" +
-//							"?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
-							"?serviceKey=" + serviceKey +
-							"&pageNo=1" +
-							"&numOfRows=100" +
-							"&type=xml";
-			
-	
-			// API 호출
-//			String response = restTemplate.getForObject(apiUrl, String.class);
-			
+			String serviceKey = "dyX6xt1gN2bRdwZi9wnVBU02Xl2/snngu69mYzVxO0mZvFhMzo96NIfl61okMnKATxRS17HNXksMcehLaLd8FA=="; // 디코딩 버전
+			String apiUrl = "http://api.data.go.kr/openapi/tn_pubr_public_auto_maintenance_company_api"
+					+ "?serviceKey=" + serviceKey
+					+ "&pageNo=1"
+					+ "&numOfRows=1000"
+					+ "&type=json"; // ★ JSON 요청
+
 			HttpHeaders headers = new HttpHeaders();
-//			headers.add("User-Agent", "Mozilla/5.0");
-			
-			headers.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
-			headers.add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
-			headers.add("Accept-Encoding", "gzip, deflate, br");
-			headers.add("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
-			headers.add("Connection", "keep-alive");
-			headers.add("Upgrade-Insecure-Requests", "1");
-			headers.add("Sec-Fetch-Dest", "document");
-			headers.add("Sec-Fetch-Mode", "navigate");
-			headers.add("Sec-Fetch-Site", "none");
-			headers.add("Accept-Charset", "UTF-8"); // 추가로 붙이면 안정성 더 좋음
-			
+			headers.add("Accept", "application/json");
 
 			HttpEntity<String> entity = new HttpEntity<>(headers);
-			
-			headers.add("Accept", "application/xml");  // ★ 추가!			
 
 			ResponseEntity<String> response = restTemplate.exchange(
-				apiUrl,
-				HttpMethod.GET,
-				entity,
-				String.class
-			);			
+					apiUrl,
+					HttpMethod.GET,
+					entity,
+					String.class
+			);
+
+			String responseBody = response.getBody();
+
+			// JSON 파싱
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode root = mapper.readTree(responseBody);
+
+			JsonNode items = root.path("response").path("body").path("items");
 			
-	
-			// 전체 JSON 문자열 그대로 넘기는 테스트
-			model.addAttribute("apiResult", response.getBody());
-			
+			System.out.println("item size: " + items.size());
+
+			if (items.isArray()) {
+				for (JsonNode item : items) {
+					CarRepairDTO dto = new CarRepairDTO();
+
+					dto.setName(item.path("inspofcNm").asText());
+					dto.setRoad_address(item.path("rdnmadr").asText());
+					dto.setLot_address(item.path("lnmadr").asText());
+					dto.setLatitude(item.path("latitude").asText());
+					dto.setLongitude(item.path("longitude").asText());
+					dto.setRegistration_date(item.path("bizrnoDate").asText());
+					dto.setOpen_time(item.path("operOpenHm").asText());
+					dto.setClose_time(item.path("operCloseHm").asText());
+					dto.setTel_number(item.path("phoneNumber").asText());
+
+					carRepairService.insertShop(dto);
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return "search"; // search.jsp
+
+		log.info("@# saveRepairShopData 끝");
+
+		return "redirect:/admin/repairShop/list"; // 저장 끝나면 관리자 리스트로 이동
 	}
+	
 	@GetMapping("/map")
 	public String mapPage() {
 		return "map";  // /WEB-INF/views/map.jsp 로 이동
-	}
+	}	
+	
 }

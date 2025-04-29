@@ -6,13 +6,13 @@ import com.boot.dto.CarRepairDTO;
 
 public interface CarRepairService {
 	
-	//25.04.29 권준우 (메서드 4개)
+	//25.04.29 권준우
 	List<CarRepairDTO> getPagedShops(int pageNo, int pageSize);	// 정비소 조회(페이징 처리)
 	List<CarRepairDTO> searchByName(String name);	// 정비소 이름으로 조회
 	CarRepairDTO getRepairShopById(int id);	// 특정 정비소 1개 조회
 	List<CarRepairDTO> getPagedShopsSorted(String sortField, String order, int page, int pageSize); // 정렬
-	int updateShop(CarRepairDTO dto);
-	int deleteShop(int id);
+	int updateShop(CarRepairDTO dto);	// 정비소 수정
+	int deleteShop(int id);	// 정비소 삭제
 	int getTotalCount();
-	
+	void insertShop(CarRepairDTO dto);	// API -> DB 저장
 }

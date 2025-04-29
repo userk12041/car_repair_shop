@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class CarRepairDTO {
 	
 	private int id;
-	
 	private String name;
 	private String road_address;
 	private String lot_address;
