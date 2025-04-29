@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -53,15 +52,6 @@ public class CarRepairAdminController {
 		return "admin"; // => admin.jsp
 	}
 	
-/*
-	@GetMapping("/admin/repairShop/list")
-	public String listRepairShops(Model model) {
-		List<CarRepairDTO> list = carRepairService.getAllShops();
-		model.addAttribute("list", list);
-		return "admin/repairShop/list";
-	}	
-*/
-	
 	// 이름으로 검색
 	@GetMapping("/admin/repairShop/search")
 	public String searchRepairShops(@RequestParam("name") String name, Model model) {
@@ -69,7 +59,7 @@ public class CarRepairAdminController {
 		
 		List<CarRepairDTO> list = carRepairService.searchByName(name);
 		model.addAttribute("list", list);
-		return "admin/repairShop/list"; // 검색 결과도 list.jsp로 보여줄거야
+		return "admin";
 	}
 
 	// 수정 적용
