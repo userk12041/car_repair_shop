@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.mapper.CarRepairMapper">
+
+	<!-- 전체 조회 -->
+	<select id="findAll" resultType="com.boot.dto.CarRepairDTO">
+		SELECT * FROM repair_shop
+	</select>
+
+	<!-- 조건부 조회 (이름 검색) -->
+	<select id="findByName" parameterType="String" resultType="com.boot.dto.CarRepairDTO">
+		SELECT * FROM repair_shop
+		WHERE name LIKE CONCAT('%', #{name}, '%')
+	</select>
+
+	<!-- 수정 -->
+	<update id="updateRepairShop" parameterType="com.boot.dto.CarRepairDTO">
+		UPDATE repair_shop
+		SET 
+			name = #{name},
+			road_address = #{roadaddress},
+			lot_address = #{lotaddress},
+			registration_date = #{registration_date},
+			open_time = #{opentime},
+			close_time = #{closetime},
+			tel_number = #{telnumber}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteRepairShop" parameterType="int">
+		DELETE FROM repair_shop
+		WHERE id = #{id}
+	</delete>
+
+</mapper>
