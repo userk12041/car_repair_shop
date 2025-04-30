@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.ReviewDAO">
+
+    <select id="getReviewsByShopId" resultType="com.boot.dto.ReviewDTO">
+        SELECT * FROM review
+        WHERE repairShopId = #{repairShopId}
+        ORDER BY createdAt DESC
+    </select>
+    
+    <insert id="insertReview">
+        INSERT INTO review (repairShopId, userId, rating, content)
+        VALUES (#{repairShopId}, #{userId}, #{rating}, #{content})
+    </insert>
+
+</mapper>
