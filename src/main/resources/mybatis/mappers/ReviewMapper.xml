@@ -6,19 +6,13 @@
 
     <select id="getReviewsByShopId" resultType="com.boot.dto.ReviewDTO">
         SELECT * FROM review
-        WHERE repairShopId = #{ShopId}
+        WHERE repairShopId = #{repairShopId}
         ORDER BY createdAt DESC
     </select>
-
-<!--	<select id="getReviewsByShopIdPaging" parameterType="map" resultType="com.boot.dto.ReviewDTO">-->
-<!--	    SELECT * FROM review-->
-<!--	    WHERE repairShopId = #{repairShopId}-->
-<!--	    ORDER BY createdAt DESC-->
-<!--	    LIMIT #{limit} OFFSET #{offset}-->
-<!--	</select>-->
-	
-<!--	<select id="countReviewsByShopId" parameterType="int" resultType="int">-->
-<!--	    SELECT COUNT(*) FROM review WHERE repairShopId = #{repairShopId}-->
-<!--	</select>-->
+    
+    <insert id="insertReview">
+        INSERT INTO review (repairShopId, userId, rating, content)
+        VALUES (#{repairShopId}, #{userId}, #{rating}, #{content})
+    </insert>
 
 </mapper>

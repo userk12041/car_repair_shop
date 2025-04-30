@@ -10,7 +10,8 @@ import com.boot.dto.CarRepairDTO;
 @Mapper
 public interface CarRepairDAO {
 	List<CarRepairDTO> getAllRepairShops();
-	
+	List<CarRepairDTO> getAllCarRepairs();
+	CarRepairDTO getRepairById(int id);
 	
     List<CarRepairDTO> getRepairShopsInBounds(
             @Param("swLat") double swLat,

@@ -109,4 +109,9 @@
         AND longitude BETWEEN #{swLng} AND #{neLng}
 	</select>
 
+	<select id="getRepairById" resultType="com.boot.dto.CarRepairDTO">
+	    SELECT *
+	    FROM repair_shop
+	    WHERE id = #{id}
+	</select>
 </mapper>
