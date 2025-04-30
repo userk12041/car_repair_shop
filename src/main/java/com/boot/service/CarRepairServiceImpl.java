@@ -51,7 +51,7 @@ public class CarRepairServiceImpl implements CarRepairService {
 		return carRepairDAO.findAllPagedSorted(sortField, order, startRow, pageSize);
 	}
 	
-	@Override	//25.04.29 권준우
+	@Override	//API -> DB 저장	25.04.29 권준우
 	public void insertShop(CarRepairDTO dto) {
 		carRepairDAO.insertShop(dto);
 	}
