@@ -92,6 +92,6 @@ public class CarRepairController {
 	
 	@GetMapping("/main")
 	public String mainPage() {
-		return "main";  
+		return "main";
 	}
 }

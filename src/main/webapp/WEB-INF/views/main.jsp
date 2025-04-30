@@ -58,7 +58,7 @@
 }
 .top-right a, .top-right span {
   margin-left: 10px;
-  color: white;
+  color: black;
   text-decoration: none;
   font-weight: bold;
 }
@@ -103,6 +103,7 @@ body, html {
 </head>
 
 <body>
+	<%@ include file="header\header.jsp" %>
 	<div class="top-right">
 	  <c:choose>
 	    <c:when test="${empty sessionScope.loginId}">
