@@ -52,6 +52,13 @@
 		<td><a href="/admin/repairShop/delete?id=${shop.id}&page=${currentPage}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a></td>
 	</tr>
 	</c:forEach>
+	
+	<a href="/admin/repairShop/list">처음 목록으로 새로고침</a>
+	<br> <br>
+	<a href="/repairShop/request">정비소 등록 요청 (사용자쪽 기능)</a>
+	<br> <br>
+	<a href="/admin/repairShop/requests">등록 요청 수락 (관리자쪽 기능)</a>
+	<br> <br>
 
 </table>
 
