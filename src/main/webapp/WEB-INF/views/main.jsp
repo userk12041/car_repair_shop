@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/header/header.jsp" %>
 <meta charset="UTF-8">
 <title>KH 전국 자동차 정비업체정보</title>
 
@@ -10,69 +11,6 @@
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=253dd4f3250d0399b6c6cd73a5596951&libraries=clusterer"></script>
 
 <style>
-:root {
-  --bg-main: linear-gradient(to top, #ff0033 20%, #1b1b2f 70%, #0a0a1a 100%);
-  --text-main: #ffffff;
-  --card-bg: rgba(60, 60, 90, 0.7);
-  --card-border: #4caf50;
-  --beam-color: linear-gradient(to bottom, #ff0033, transparent);
-}
-
-/* .top-button {
-  position: absolute;
-  top: 20px;
-  font-size: 16px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  z-index: 9999;
-  cursor: pointer;
-  color: white;
-  background-color: rgba(70, 70, 200, 0.7);
-  text-decoration: none;
-  transition: 0.3s;
-}
-.top-button:hover {
-  background-color: #4455ee;
-} */
-
-.bottom-button {
-  position: absolute;
-  bottom: 20px;
-  font-size: 16px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  z-index: 9999;
-  cursor: pointer;
-  color: white;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.top-right {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-}
-.top-right a, .top-right span {
-  margin-left: 10px;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-.top-right a:hover {
-  text-decoration: underline;
-}
-
-body.light-mode {
-  --bg-main: linear-gradient(to top, #e0f7fa 0%, #d0e9f5 100%);
-  --text-main: #1b3a57;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: #5c9ead;
-  --beam-color: linear-gradient(to bottom, #5c9ead, transparent);
-}
 body, html {
   margin: 0; padding: 0; height: 100%;
   font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
@@ -84,42 +22,16 @@ body, html {
 .container { display: flex; height: 100vh; z-index: 4; }
 .list-panel { width: 30%; overflow-y: auto; background: var(--card-bg); padding: 20px; box-sizing: border-box; border-right: 1px solid var(--card-border); }
 .map-panel { width: 70%; background: transparent; position: relative; }
-/* #playMusic, #toggleMode {
-  position: absolute; top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer;
-  border-radius: 10px; border: none; z-index: 9999; transition: 0.3s;
-} */
-#playMusic { right: 20px; background-color: rgba(255,0,50,0.7); color: white; }
-#toggleMode { right: 160px; background-color: rgba(155,89,182,0.7); color: white; }
-#playMusic:hover, #toggleMode:hover { background-color: #ff0033; }
 .shop-card { 
   background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px;
   padding: 15px; margin-bottom: 15px; transition: 0.3s; cursor: pointer;
 }
 .shop-card:hover { background-color: var(--card-border); color: var(--bg-main); transform: translateY(-5px) scale(1.02); }
 .shop-card h3, .shop-card p { margin: 0; font-size: 16px; }
-
-
 </style>
 </head>
 
 <body>
-	<div class="top-right">
-	  <c:choose>
-	    <c:when test="${empty sessionScope.loginId}">
-	      <a href="/login">로그인</a>
-	      <a href="/register">회원가입</a>
-	    </c:when>
-	    <c:otherwise>
-	      <span>${sessionScope.loginId}님</span>
-	      <a href="/logout">로그아웃</a>
-	    </c:otherwise>
-	  </c:choose>
-	</div>
-
-<button id="playMusic" class="bottom-button">🎵 음악 재생</button>
-<button id="toggleMode" class="bottom-button">🌗 모드 변경</button>
-
-
 <div class="container">
   <div class="list-panel" id="shopList">
     <h2>전국 자동차 정비업체</h2>
@@ -130,87 +42,99 @@ body, html {
   </div>
 </div>
 
-<audio id="bgm" loop>
-  <source src="https://vgmsite.com/soundtracks/the-end-of-evangelion/lsdvlkqn/18.%20Komm%2C%20s%C3%BCsser%20Tod.mp3" type="audio/mp3">
-</audio>
-
 <script>
-const playButton = document.getElementById('playMusic');
-const toggleButton = document.getElementById('toggleMode');
-const audio = document.getElementById('bgm');
-let map, clusterer, currentInfoWindow;
+var map;
+var clusterer;
+var markers = [];
+var currentInfoWindow = null;
+	
+window.onload = function() {
+    var mapContainer = document.getElementById('map');
+    var mapOption = {
+        center: new kakao.maps.LatLng(36.5, 127.5), // 대한민국 중심
+        level: 13
+    };
 
-playButton.addEventListener('click', function() {
-  audio.play();
-  this.style.display = 'none';
-});
-toggleButton.addEventListener('click', function() {
-  document.body.classList.toggle('light-mode');
-});
+    map = new kakao.maps.Map(mapContainer, mapOption);
+	
+	clusterer = new kakao.maps.MarkerClusterer({
+	    map: map,
+	    averageCenter: true, // 클러스터 중심좌표 설정
+	    minLevel: 10 // 클러스터 할 최소 지도 레벨
+	});
 
-document.addEventListener("DOMContentLoaded", function() {
-  map = new kakao.maps.Map(document.getElementById('map'), {
-    center: new kakao.maps.LatLng(36.5, 127.5),
-    level: 13
-  });
+	    // ⭐ 지도 이동하거나 확대/축소할 때마다 호출
+	kakao.maps.event.addListener(map, 'idle', function() {
+	        loadMarkers();
+	    });
 
-  clusterer = new kakao.maps.MarkerClusterer({
-    map: map,
-    averageCenter: true,
-    minLevel: 10
-  });
+	    loadMarkers(); // 처음에도 마커 불러오기
+	}
+	
+	function escapeHtml(text) {
+	    if (!text) return "";
+	    return text
+	        .replace(/&/g, "&amp;")
+	        .replace(/</g, "&lt;")
+	        .replace(/>/g, "&gt;");
+	}
+	
+	function loadMarkers() {
+	    var bounds = map.getBounds();
+	    var sw = bounds.getSouthWest();
+	    var ne = bounds.getNorthEast();
 
-  loadMarkers();
+	    var swLat = sw.getLat();
+	    var swLng = sw.getLng();
+	    var neLat = ne.getLat();
+	    var neLng = ne.getLng();
 
-  document.getElementById('shopList').addEventListener('click', function(e) {
-    const card = e.target.closest('.shop-card');
-    if (card) {
-      const lat = parseFloat(card.dataset.lat);
-      const lng = parseFloat(card.dataset.lng);
-      map.panTo(new kakao.maps.LatLng(lat, lng));
-    }
-  });
-});
+	    // 기존 마커 지우기
+	    clusterer.clear();
 
-function loadMarkers() {
-  $.ajax({
-    url: '/api/repairShops',
-    method: 'GET',
-    success: function(data) {
-      const shopListElement = document.getElementById("shopList");
+	    // AJAX 호출
+	    $.ajax({
+	        url: `/api/repairShops?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}`,
+	        method: 'GET',
+	        success: function(data) {
+				console.log("받은 데이터:", data);
+	            var limitedData = data.slice(0, 2000); // 최대 500개 제한
 
-      data.forEach(function(shop) {
-        const card = document.createElement('div');
-        card.className = 'shop-card';
-        card.dataset.lat = shop.latitude;
-        card.dataset.lng = shop.longitude;
-        card.innerHTML = `<h3>${shop.name}</h3><p>${shop.road_address}</p>`;
-        shopListElement.appendChild(card);
+				var newMarkers = limitedData.map(function(shop) {
+					var content = '<div style="display:inline-block; padding:8px; font-size:13px; max-width:300px; background:#fff; border:1px solid #888; white-space:normal; word-break:break-word;">' +
+					              '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
+					              escapeHtml(shop.road_address) + '<br/>' +
+								  '<a href="/repairShop/view?id=' +shop.id+' " style="float:right; display:inline-block; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>'
+								  +
+					              '</div>';
 
-        const marker = new kakao.maps.Marker({
-          position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
-          title: shop.name
-        });
+					var infowindow = new kakao.maps.InfoWindow({
+					    content: content
+					});
 
-        const infowindow = new kakao.maps.InfoWindow({
-          content: `<div style="padding:5px;">${shop.name}</div>`
-        });
+					var marker = new kakao.maps.Marker({
+					    position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
+					    title: shop.name
+					});
 
-        kakao.maps.event.addListener(marker, 'click', function() {
-          if (currentInfoWindow) currentInfoWindow.close();
-          infowindow.open(map, marker);
-          currentInfoWindow = infowindow;
-        });
+					kakao.maps.event.addListener(marker, 'click', function() {
+					    if (currentInfoWindow) {
+					        currentInfoWindow.close();
+					    }
+					    infowindow.open(map, marker);
+					    currentInfoWindow = infowindow;
+					});
 
-        clusterer.addMarker(marker);
-      });
-    },
-    error: function(xhr, status, error) {
-      console.error('업체 정보 불러오기 실패', error);
-    }
-  });
-}
-</script>
+				    return marker;
+				});
+	            clusterer.addMarkers(newMarkers);
+	        },
+	        error: function(xhr, status, error) {
+	            console.error('업체 정보 불러오기 실패', error);
+	        }
+	    });
+	}
+	</script>
 
 </body>
 </html>

@@ -1,6 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!--<%@ page contentType="text/html;charset=UTF-8" language="java" %>-->
 <html>
 <head>
+	<%@ include file="/WEB-INF/views/header/header.jsp" %>
+	
     <title>정비업체 지도</title>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>	
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=253dd4f3250d0399b6c6cd73a5596951&libraries=clusterer"></script>
@@ -30,8 +32,8 @@
 		    minLevel: 10 // 클러스터 할 최소 지도 레벨
 		});
 
-		    // ⭐ 지도 이동하거나 확대/축소할 때마다 호출
-		kakao.maps.event.addListener(map, 'idle', function() {
+		    // ⭐ 지도 이  동하거나 확대/축소할 때마다 호출
+		kakao.maps.event.addListener( map, 'idle', function() {
 		        loadMarkers();
 		    });
 
@@ -71,7 +73,7 @@
 						var content = '<div style="display:inline-block; padding:8px; font-size:13px; max-width:300px; background:#fff; border:1px solid #888; white-space:normal; word-break:break-word;">' +
 						              '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
 						              escapeHtml(shop.road_address) + '<br/>' +
-									  '<a href="/repairShop/view?id=${shop.id}" style="float:right; display:inline-block; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>'
+									  '<a href="/repairShop/view?id=' +shop.id+' " style="float:right; display:inline-block; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>'
 									  +
 						              '</div>';
 
