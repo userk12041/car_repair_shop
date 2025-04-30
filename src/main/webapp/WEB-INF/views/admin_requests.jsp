@@ -57,6 +57,11 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		
+		<!-- 하단 버튼 -->
+		<div class="text-center">
+			<a href="/admin/repairShop/list" class="btn btn-outline-primary btn-sm me-2">정비소 목록</a>
+		</div>
 	</div>
 </body>
 </html>
