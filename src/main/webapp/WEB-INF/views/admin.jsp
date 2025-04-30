@@ -18,6 +18,11 @@
 <div class="container my-5">
 	<h1 class="mb-4 text-center">자동차 정비소 리스트 (관리자용)</h1>
 
+	<form action="/admin/repairShop/sync" method="post"  onsubmit="return confirm('시간이 소요되는 작업입니다. 정말 동기화 하시겠습니까?');"
+			style="display:inline-block; margin-bottom: 15px; float: right;"">
+		<input type="submit" value="API 동기화" class="btn btn-primary">
+	</form>
+	
 	<!-- 검색 폼 -->
 	<form action="/admin/repairShop/search" method="get" class="mb-3">
 		<div class="input-group">
@@ -103,11 +108,20 @@
 			history.replaceState({}, null, location.pathname);
 		</script>
 	</c:if>
+	
 	<c:if test="${param.deleteSuccess == 'true'}">
 		<script>
 			alert('정비소 정보가 삭제되었습니다.');
 			history.replaceState({}, null, location.pathname);
 		</script>
+	</c:if>
+	
+	<!--	API 동기화-->
+	<c:if test="${not empty sessionScope.syncResult}">
+		<script>
+			alert('동기화 완료: ${sessionScope.syncResult.insertedCount}건 추가, ${sessionScope.syncResult.updatedCount}건 수정, ${sessionScope.syncResult.skippedCount}건 그대로');
+		</script>
+		<c:remove var="syncResult" scope="session"/>
 	</c:if>
 		
 </div>

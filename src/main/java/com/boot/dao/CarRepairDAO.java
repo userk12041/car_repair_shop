@@ -32,5 +32,8 @@ public interface CarRepairDAO {
             @Param("startRow") int startRow,
             @Param("rowCount") int rowCount);
 	
-	void insertShop(CarRepairDTO dto);	// API -> DB 저장
+	void insertShop(CarRepairDTO dto);
+	List<CarRepairDTO> findByNameAndRoadAddress(@Param("name") String name, @Param("road_address") String road_address);
+	int updateShop(CarRepairDTO dto);
+
 }

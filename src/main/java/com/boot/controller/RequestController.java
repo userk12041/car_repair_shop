@@ -53,6 +53,7 @@ public class RequestController {
 	public String approveRequest(@RequestParam("id") int id) {
 		log.info("@# approveRequest: {}", id);
 		RequestDTO request = requestService.getRequestById(id);
+		log.info("@# request: {}", id);
 		
 		if (request != null) {
 			CarRepairDTO newShop = new CarRepairDTO();
