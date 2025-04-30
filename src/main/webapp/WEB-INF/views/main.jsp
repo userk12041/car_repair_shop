@@ -88,44 +88,6 @@ window.onload = function() {
 	    var swLng = sw.getLng();
 	    var neLat = ne.getLat();
 	    var neLng = ne.getLng();
-<<<<<<< HEAD
-	    // 기존 마커 지우기
-	    clusterer.clear();
-
-	    // AJAX 호출
-	    $.ajax({
-	        url: `/api/repairShops?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}`,
-	        method: 'GET',
-	        success: function(data) {
-				console.log("받은 데이터:", data);
-	            var limitedData = data.slice(0, 2000); // 최대 500개 제한
-
-				var newMarkers = limitedData.map(function(shop) {
-					var content = '<div style="display:inline-block; padding:8px; font-size:13px; max-width:300px; background:#fff; border:1px solid #888; white-space:normal; word-break:break-word;">' +
-					              '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
-					              escapeHtml(shop.road_address) + '<br/>' +
-								  '<a href="/repairShop/view?id=' +shop.id+' " style="float:right; display:inline-block; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>'
-								  +
-					              '</div>';
-
-					var infowindow = new kakao.maps.InfoWindow({
-					    content: content
-					});
-
-					var marker = new kakao.maps.Marker({
-					    position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
-					    title: shop.name
-					});
-
-					kakao.maps.event.addListener(marker, 'click', function() {
-					    if (currentInfoWindow) {
-					        currentInfoWindow.close();
-					    }
-					    infowindow.open(map, marker);
-					    currentInfoWindow = infowindow;
-					});
-
-=======
 
 	    // 기존 마커 지우기
 	    clusterer.clear();
@@ -163,7 +125,6 @@ window.onload = function() {
 					    currentInfoWindow = infowindow;
 					});
 
->>>>>>> 56be419d3eaa40318bd9648dc3f8700225a755d2
 				    return marker;
 				});
 	            clusterer.addMarkers(newMarkers);
