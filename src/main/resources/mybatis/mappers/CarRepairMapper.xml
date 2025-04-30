@@ -114,4 +114,9 @@
 	    FROM repair_shop
 	    WHERE id = #{id}
 	</select>
+	
+	<select id="listSearchByName" resultType="com.boot.dto.CarRepairDTO">
+	    SELECT * FROM repair_shop
+	    WHERE name LIKE CONCAT('%', #{keyword}, '%')
+	</select>
 </mapper>
