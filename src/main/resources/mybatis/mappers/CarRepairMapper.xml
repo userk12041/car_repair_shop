@@ -93,7 +93,7 @@
     </select>
     
     <select id="getCarRepairInBounds" resultType="com.boot.dto.CarRepairDTO">
-    SELECT 
+    	SELECT 
         id,
         name,
         road_address,

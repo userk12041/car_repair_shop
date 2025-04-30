@@ -1,17 +1,16 @@
-<!--<%@ page contentType="text/html;charset=UTF-8" language="java" %>-->
+<!--<%@ page contentType="text/html; charset=UTF-8" language="java" %>-->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
 	<%@ include file="/WEB-INF/views/header/header.jsp" %>
-	
     <title>업체 상세정보</title>
 	<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=253dd4f3250d0399b6c6cd73a5596951&libraries=clusterer"></script>
 	
 	<style>
 		body {
 		    font-family: 'Noto Sans KR', sans-serif;
-		    margin: 20px;
+		    /*margin: 20px;*/
 		    background-color: #fafafa;
 		}
 
