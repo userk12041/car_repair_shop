@@ -35,6 +35,8 @@ body, html {
 <div class="container">
   <div class="list-panel" id="shopList">
     <h2>전국 자동차 정비업체</h2>
+	<input type="text" id="searchKeyword" placeholder="업체명을 입력하세요" style="width:100%; padding:8px; margin-bottom:10px;">
+	<button onclick="searchShops()" style="width:100%; padding:8px;">검색</button>
   </div>
 
   <div class="map-panel">
@@ -131,6 +133,69 @@ window.onload = function() {
 	        },
 	        error: function(xhr, status, error) {
 	            console.error('업체 정보 불러오기 실패', error);
+	        }
+	    });
+	}
+	function searchShops() {
+	    var keyword = $('#searchKeyword').val().trim();
+	    if (!keyword) {
+	        loadMarkers(); // 검색어 없으면 전체 로딩
+	        return;
+	    }
+
+	    // 기존 마커/리스트 초기화
+	    clusterer.clear();
+	    $('#shopList').html(
+	        '<h2 style="text-align:center;">전국 자동차 정비업체</h2>' +
+	        '<input type="text" id="searchKeyword" placeholder="업체명을 입력하세요" style="width:100%; padding:8px; margin-bottom:10px;">' +
+	        '<button onclick="searchShops()" style="width:100%; padding:8px;">검색</button>'
+	    );
+
+	    // AJAX 검색
+	    $.ajax({
+	        url: "/api/repairShops/search?keyword=" + encodeURIComponent(keyword),
+	        method: 'GET',
+	        success: function(data) {
+	            const limitedData = data.slice(0, 500); // 검색 결과 제한
+
+	            const newMarkers = limitedData.map(shop => {
+	                // 리스트에 추가 (템플릿 리터럴 X, JSP 충돌 방지)
+	                $('#shopList').append(
+	                    '<div class="shop-card">' +
+	                        '<h3>' + escapeHtml(shop.name) + '</h3>' +
+	                        '<p>' + escapeHtml(shop.road_address) + '</p>' +
+	                    '</div>'
+	                );
+
+	                // 마커/인포윈도우 생성
+	                const content =
+	                    '<div style="display:inline-block; padding:8px; font-size:13px; max-width:300px; background:#fff; border:1px solid #888;">' +
+	                        '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
+	                        escapeHtml(shop.road_address) + '<br/>' +
+	                        '<a href="/repairShop/view?id=' + shop.id + '" style="float:right; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>' +
+	                    '</div>';
+
+	                const infowindow = new kakao.maps.InfoWindow({ content });
+
+	                const marker = new kakao.maps.Marker({
+	                    position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
+	                    title: shop.name
+	                });
+
+	                kakao.maps.event.addListener(marker, 'click', function () {
+	                    if (currentInfoWindow) currentInfoWindow.close();
+	                    infowindow.open(map, marker);
+	                    currentInfoWindow = infowindow;
+	                });
+
+	                return marker;
+	            });
+
+	            // 지도에 마커 추가
+	            clusterer.addMarkers(newMarkers);
+	        },
+	        error: function() {
+	            alert('검색 실패');
 	        }
 	    });
 	}
