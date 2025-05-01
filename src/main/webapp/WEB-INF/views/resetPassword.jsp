@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <title>비밀번호 재설정</title>
   <style>
-	 <style>
 	    body {
 	      font-family: 'Noto Sans KR', sans-serif;
 	      background-color: #f8f8f8;
