@@ -12,16 +12,40 @@
 			white-space: nowrap;
 			padding: 10px 20px;
 		}
+		
+		td {
+			vertical-align: middle;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+		
+		th.date-col, td.date-col {
+			white-space: nowrap;
+			min-width: 110px;
+		}
+
+		th.time-col, td.time-col {
+			width: 70px;
+			text-align: center;
+		}		
 	</style>
 </head>
 <body>
-<div class="container my-5">
-	<h1 class="mb-4 text-center">자동차 정비소 리스트 (관리자용)</h1>
-
-	<form action="/admin/repairShop/sync" method="post"  onsubmit="return confirm('시간이 소요되는 작업입니다. 정말 동기화 하시겠습니까?');"
-			style="display:inline-block; margin-bottom: 15px; float: right;"">
+	<!-- 메인 페이지 이동 버튼 (왼쪽 상단)-->
+	<a href="http://localhost:8485/main" class="btn btn-outline-dark position-absolute" style="top: 20px; left: 20px; z-index: 1000;">
+		← 메인 페이지
+	</a>
+	
+	<!-- API 동기화 버튼 (오른쪽 상단) -->
+	<form action="/admin/repairShop/sync" method="post"
+		  onsubmit="return confirm('시간이 소요되는 작업입니다. 정말 동기화 하시겠습니까?');"
+		  class="position-absolute"
+		  style="top: 20px; right: 20px; z-index: 1000;">
 		<input type="submit" value="API 동기화" class="btn btn-primary">
 	</form>
+	
+<div class="container my-5">
+	<h1 class="mb-4 text-center">자동차 정비소 리스트 (관리자용)</h1>
 	
 	<!-- 검색 폼 -->
 	<form action="/admin/repairShop/search" method="get" class="mb-3">
@@ -46,9 +70,9 @@
 			<th>정비소 이름</th>
 			<th>도로명 주소</th>
 			<th>지번 주소</th>
-			<th>등록일자</th>
-			<th>운영 시작시간</th>
-			<th>운영 종료시간</th>
+			<th class="date-col">등록일자</th>
+			<th class="time-col">운영 시작시간</th>
+			<th class="time-col">운영 종료시간</th>
 			<th>전화번호</th>
 			<th>수정</th>
 			<th>삭제</th>
@@ -97,7 +121,7 @@
 	<!-- 하단 버튼 -->
 	<div class="text-center">
 		<a href="/admin/repairShop/list" class="btn btn-outline-primary btn-sm me-2">처음 목록으로 새로고침</a>
-		<a href="/repairShop/request" class="btn btn-outline-secondary btn-sm me-2">정비소 등록 요청 (사용자)</a>
+		<a href="/repairShop/request" class="btn btn-outline-secondary btn-sm me-2">정비소 등록 요청</a>
 		<a href="/admin/repairShop/requests" class="btn btn-outline-danger btn-sm">정비소 신청 관리</a>
 	</div>
 
