@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boot.dto.UserDTO;
 import com.boot.service.UserService;
@@ -27,26 +27,27 @@ public class UserController {
 	public String registerForm() {
 		return "register";
 	}
-//	
-//	@GetMapping("/idCheck")
-//    @ResponseBody
-//	public String checkId(@RequestParam("user_id") String userId) {
-//		if(userService.isUserIdAvailable(userId)) {
-//			return "true";
-//		}
-//		else {
-//			return "false";
-//		}
-//	}
-//    @GetMapping("/nickCheck")
-//    @ResponseBody
-//    public String checkNick(@RequestParam("nickname") String nickname) {
-//        if (userService.isNicknameAvailable(nickname)) {
-//            return "usable";
-//        } else {
-//            return "unusable";
-//        }
-//    }
+	
+	@GetMapping("/idCheck")
+	@ResponseBody
+	public String checkId(@RequestParam("user_id") String userId) {
+	    if (userService.isUserIdAvailable(userId)) {
+	        return "usable";      // 사용 가능한 아이디
+	    } else {
+	        return "duplicate";   // 이미 사용 중인 아이디
+	    }
+	}
+
+	@GetMapping("/nickCheck")
+	@ResponseBody
+	public String checkNick(@RequestParam("nickname") String nickname) {
+	    if (userService.isNicknameAvailable(nickname)) {
+	        return "usable";      // 사용 가능
+	    } else {
+	        return "duplicate";   // 이미 사용 중 (프론트와 일치)
+	    }
+	}
+
 
     @PostMapping("/registerOk")
     public String registerUser(@RequestParam HashMap<String, String> param) {
@@ -95,21 +96,49 @@ public class UserController {
         session.invalidate();
         return "redirect:/main";
     }
-    
-    @PostMapping("/admin/auth/verify")
-    public String verifyAdmin(@RequestParam String adminPassword, HttpSession session, RedirectAttributes redirectAttrs) {
-    	
-    	final String ADMIN_SECRET = "1234"; // 테스트용 관리자 비밀번호
+    @GetMapping("/find-id")
+    public String findIdForm() {
+        return "findId"; // findId.jsp
+    }
 
-    	if (ADMIN_SECRET.equals(adminPassword)) {
-    		// 인증 성공 → 세션 권한을 ADMIN으로 변경
-    		session.setAttribute("loginRole", "ADMIN");
-    		return "redirect:/admin/repairShop/list"; // 관리자 페이지로 이동
-    	} else {
-    		// 인증 실패 → 에러 메시지와 함께 인증 페이지로 리다이렉트
-    		redirectAttrs.addFlashAttribute("errorMsg", "관리자 비밀번호가 올바르지 않습니다.");
-    		return "redirect:/admin/auth";
-    	}
-    }    
+    @PostMapping("/find-id")
+    public String findId(@RequestParam String email,
+                         @RequestParam String phone_number,
+                         Model model) {
+        String userId = userService.findUserIdByEmailAndPhone(email, phone_number);
+        if (userId != null) {
+            model.addAttribute("foundId", userId);
+        } else {
+            model.addAttribute("notFound", true);
+        }
+        return "findId";
+    }
+    @GetMapping("/find-password")
+    public String findPwForm() {
+        return "findPassword"; // findPassword.jsp
+    }
+
+    @PostMapping("/find-password")
+    public String findPw(@RequestParam String user_id,
+                         @RequestParam String email,
+                         Model model) {
+        boolean match = userService.verifyUserIdAndEmail(user_id, email);
+        if (match) {
+            model.addAttribute("userId", user_id);
+            return "resetPassword"; // 비밀번호 재설정 폼으로 이동
+        } else {
+            model.addAttribute("notFound", true);
+            return "findPassword";
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestParam String user_id,
+                                @RequestParam String newPassword) {
+        userService.updatePassword(user_id, newPassword);
+        return "redirect:/login";
+    }
+
+
 
 }

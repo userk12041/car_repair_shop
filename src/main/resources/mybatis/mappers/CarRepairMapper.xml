@@ -46,13 +46,13 @@
 		DELETE FROM repair_shop
 		WHERE id = #{id}
 	</delete>
-		
-	<!-- 페이징 처리에 필요 25.04.29 권준우 -->
+	
+	<!--	 페이징 처리에 필요 25.04.29 권준우 -->
 	<select id="countShops" resultType="int">
 		SELECT COUNT(*) FROM repair_shop
 	</select>
 	
-	<!-- 정렬 25.04.29 권준우 -->
+	<!--	 정렬 25.04.29 권준우 -->
 	<select id="findAllPagedSorted" resultType="com.boot.dto.CarRepairDTO">
 		SELECT * FROM repair_shop
 		ORDER BY
@@ -67,6 +67,30 @@
 			</choose>
 		LIMIT #{startRow}, #{rowCount}
 	</select>
+	
+	
+	<select id="findPagedSearchSorted" resultType="com.boot.dto.CarRepairDTO">
+		SELECT * FROM repair_shop
+		WHERE name LIKE CONCAT('%', #{name}, '%')
+		ORDER BY
+			<choose>
+				<when test="sortField == 'name'">name</when>
+				<when test="sortField == 'registration_date'">registration_date</when>
+				<otherwise>id</otherwise>
+			</choose>
+			<choose>
+				<when test="order == 'desc'">DESC</when>
+				<otherwise>ASC</otherwise>
+			</choose>
+		LIMIT #{startRow}, #{rowCount}
+	</select>
+	
+	
+	<select id="countSearchResults" resultType="int">
+		SELECT COUNT(*) FROM repair_shop
+		WHERE name LIKE CONCAT('%', #{name}, '%')
+	</select>
+	
 	
 	<!-- DB 저장 쿼리 -->
 	<insert id="insertShop" parameterType="com.boot.dto.CarRepairDTO">
