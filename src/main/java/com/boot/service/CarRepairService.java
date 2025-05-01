@@ -3,7 +3,6 @@ package com.boot.service;
 import java.util.List;
 
 import com.boot.dto.CarRepairDTO;
-import com.boot.dto.SyncResultDTO;
 
 public interface CarRepairService {
 	
@@ -15,9 +14,5 @@ public interface CarRepairService {
 	int updateShop(CarRepairDTO dto);	// 정비소 수정
 	int deleteShop(int id);	// 정비소 삭제
 	int getTotalCount();
-	
-	void insertShop(CarRepairDTO dto);	// 정비소 추가
-	public void saveInitialRepairShopData();	// API -> DB 저장
-	SyncResultDTO syncFromAPI();	// API 동기화 -> DB 갱신
-
+	void insertShop(CarRepairDTO dto);	// API -> DB 저장
 }

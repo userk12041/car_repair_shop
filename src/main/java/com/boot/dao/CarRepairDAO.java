@@ -9,17 +9,15 @@ import com.boot.dto.CarRepairDTO;
 
 @Mapper
 public interface CarRepairDAO {
-	List<CarRepairDTO> getAllCarRepairs();
-	CarRepairDTO getRepairById(int id);
+	List<CarRepairDTO> getAllRepairShops();
 	
-    List<CarRepairDTO> getCarRepairInBounds(
+	
+    List<CarRepairDTO> getRepairShopsInBounds(
             @Param("swLat") double swLat,
             @Param("swLng") double swLng,
             @Param("neLat") double neLat,
             @Param("neLng") double neLng
         );
-    
-    List<CarRepairDTO> listSearchByName(@Param("keyword") String keyword);
     
     //25.04.29 권준우
     List<CarRepairDTO> findAllPaged(@Param("startRow") int startRow, @Param("rowCount") int rowCount);
@@ -33,10 +31,5 @@ public interface CarRepairDAO {
             @Param("startRow") int startRow,
             @Param("rowCount") int rowCount);
 	
-
 	void insertShop(CarRepairDTO dto);	// API -> DB 저장
-	List<CarRepairDTO> findByNameAndRoadAddress(@Param("name") String name, @Param("road_address") String road_address);
-	int updateShop(CarRepairDTO dto);
-	
-
 }

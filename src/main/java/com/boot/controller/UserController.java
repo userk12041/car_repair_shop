@@ -26,6 +26,26 @@ public class UserController {
 	public String registerForm() {
 		return "register";
 	}
+//	
+//	@GetMapping("/idCheck")
+//    @ResponseBody
+//	public String checkId(@RequestParam("user_id") String userId) {
+//		if(userService.isUserIdAvailable(userId)) {
+//			return "true";
+//		}
+//		else {
+//			return "false";
+//		}
+//	}
+//    @GetMapping("/nickCheck")
+//    @ResponseBody
+//    public String checkNick(@RequestParam("nickname") String nickname) {
+//        if (userService.isNicknameAvailable(nickname)) {
+//            return "usable";
+//        } else {
+//            return "unusable";
+//        }
+//    }
 
     @PostMapping("/registerOk")
     public String registerUser(@RequestParam HashMap<String, String> param) {
@@ -61,7 +81,6 @@ public class UserController {
         	log.info("@# user.getUserId() => " + user.getUserId());
 
             session.setAttribute("loginId", user.getUserId());
-            session.setAttribute("loginNickname", user.getNickname());
             log.info("@# session loginId=>"+session.getAttribute("loginId"));
             return "redirect:/main";  // main.jsp 매핑
         } else {
