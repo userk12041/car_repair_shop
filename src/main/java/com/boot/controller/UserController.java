@@ -77,12 +77,14 @@ public class UserController {
                              Model model) {
         UserDTO user = userService.login(user_id, password);
         
-        
         if (user != null) {
         	log.info("@# user 객체 => " + user);
         	log.info("@# user.getUserId() => " + user.getUserId());
 
             session.setAttribute("loginId", user.getUserId());
+            session.setAttribute("loginNickname", user.getNickname());
+            session.setAttribute("loginRole", user.getRole());
+            
             log.info("@# session loginId=>"+session.getAttribute("loginId"));
             return "redirect:/main";  // main.jsp 매핑
         } else {

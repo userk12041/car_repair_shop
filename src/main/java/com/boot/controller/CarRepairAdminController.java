@@ -140,7 +140,7 @@ public class CarRepairAdminController {
 		if (ADMIN_SECRET.equals(adminPassword)) {
 			// 인증 성공 → 세션 권한을 ADMIN으로 변경
 			session.setAttribute("loginRole", "ADMIN");
-			return "redirect:/admin/repairShop/list"; // 관리자 페이지로 이동
+			return "redirect:/main"; // 관리자 페이지로 이동
 		} else {
 			// 인증 실패 → 에러 메시지와 함께 인증 페이지로 리다이렉트
 			redirectAttrs.addFlashAttribute("errorMsg", "관리자 비밀번호가 올바르지 않습니다.");

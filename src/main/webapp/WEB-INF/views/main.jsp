@@ -88,37 +88,6 @@
 
 <body>
 
-	<!-- 임시용 버튼 3개 구현했습니다. main.jsp 작업하시는 분이 원하시는대로 디자인 작업해주시면 됩니다.  -->
-
-  <!-- 1. 메인 페이지 내 관리자 이동 버튼 -->
-  <c:choose>
-  <c:when test="${sessionScope.loginRole == 'ADMIN'}">
-    <button type="button" class="btn btn-danger" onclick="location.href='/admin/repairShop/list'">
-    	관리자 페이지
-    </button>
-  </c:when>
-  <c:otherwise>
-    <button type="button" class="btn btn-outline-danger" onclick="location.href='/admin/auth'">
-    	관리자 페이지
-    </button>
-  </c:otherwise>
-  </c:choose>
-  
-  <!-- 2. 정비소 추가 버튼 -->
-  <c:choose>
-  <c:when test="${not empty sessionScope.loginId}">
-  	<button type="button" class="btn btn-success" onclick="location.href='/repairShop/request'">정비소 추가</button>
-  </c:when>
-  <c:otherwise>
-  	<button type="button" class="btn btn-secondary" onclick="alert('로그인 상태에서 이용 가능한 서비스 입니다.')">정비소 추가</button>
-  </c:otherwise>
-  </c:choose>
-
-  <!-- 3. 테스트용 세션 초기화 버튼. 실제로 파일 제출시에는 주석처리 하기. -->
-  <button type="button" class="btn btn-sm btn-outline-warning" onclick="location.href='/session/reset'">
-  	세션 초기화 (완성 버전에서는 없애야함)
-  </button>
-  
   <div class="container">
     <div class="list-panel" id="shopList">
       <h2 style="text-align: center;">전국 자동차 정비업체</h2>
