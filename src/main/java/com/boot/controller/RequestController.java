@@ -53,8 +53,7 @@ public class RequestController {
 	public String approveRequest(@RequestParam("id") int id) {
 		log.info("@# approveRequest: {}", id);
 		RequestDTO request = requestService.getRequestById(id);
-		log.info("@# request: {}", id);
-		
+
 		if (request != null) {
 			CarRepairDTO newShop = new CarRepairDTO();
 			newShop.setName(request.getName());
@@ -65,18 +64,22 @@ public class RequestController {
 			newShop.setClose_time(request.getClose_time());
 			newShop.setTel_number(request.getTel_number());
 
-			carRepairService.insertShop(newShop); // 정식 테이블로 insert
-			requestService.changeStatus(id, "APPROVED"); // 삭제 대신 상태 변경
+			carRepairService.insertShop(newShop);
+			requestService.changeStatus(id, "APPROVED");
 		}
-		
-		return "redirect:/admin/repairShop/requests";
+
+		// 승인 완료 alert용 파라미터 추가
+		return "redirect:/admin/repairShop/requests?approved=true";
 	}
 
 	// 신청 거절 처리
 	@PostMapping("/admin/repairShop/reject")
 	public String rejectRequest(@RequestParam("id") int id) {
 		log.info("@# rejectRequest: {}", id);
-		requestService.changeStatus(id, "REJECTED"); // 삭제 대신 상태 변경
-		return "redirect:/admin/repairShop/requests";
+		requestService.changeStatus(id, "REJECTED");
+
+		// 거절 alert용 파라미터 추가
+		return "redirect:/admin/repairShop/requests?rejected=true";
 	}
+
 }

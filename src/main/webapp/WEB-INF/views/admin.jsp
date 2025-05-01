@@ -100,27 +100,6 @@
 		</c:forEach>
 	</table>
 
-	<!-- 페이징 -->
-	<!--
-	<div class="text-center my-4">
-		<c:if test="${hasPrev}">
-			<a href="?page=${startPage - 1}">&lt;</a>
-		</c:if>
-		<c:forEach var="i" begin="${startPage}" end="${endPage}">
-			<c:choose>
-				<c:when test="${i == currentPage}">
-					<strong>[${i}]</strong>
-				</c:when>
-				<c:otherwise>
-					<a href="?page=${i}">${i}</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-		<c:if test="${hasNext}">
-			<a href="?page=${endPage + 1}">&gt;</a>
-		</c:if>
-	</div>
-	-->
 	<div class="text-center my-4">
 		<c:if test="${hasPrev}">
 			<a href="?page=${startPage - 1}&sortField=${sortField}&order=${order}&name=${name}">&lt;</a>
@@ -143,7 +122,7 @@
 	<!-- 하단 버튼 -->
 	<div class="text-center">
 		<a href="/admin/repairShop/list" class="btn btn-outline-primary btn-sm me-2">처음 목록으로 새로고침</a>
-		<a href="/repairShop/request" class="btn btn-outline-secondary btn-sm me-2">정비소 등록 요청</a>
+		<a href="/repairShop/request" class="btn btn-outline-secondary btn-sm me-2">정비소 등록 신청</a>
 		<a href="/admin/repairShop/requests" class="btn btn-outline-danger btn-sm">정비소 신청 관리</a>
 	</div>
 
