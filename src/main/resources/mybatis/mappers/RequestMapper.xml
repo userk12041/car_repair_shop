@@ -5,16 +5,20 @@
     
 <mapper namespace="com.boot.dao.RequestDAO">
 
-	<insert id="insertRequest">
+	<!-- 정비소 신청 -->
+	<insert id="insertRequest" parameterType="com.boot.dto.RequestDTO">
 		INSERT INTO repair_shop_request
 		(name, road_address, lot_address, registration_date, open_time, close_time, tel_number, request_user_id, status)
-		VALUES (#{name}, #{road_address}, #{lot_address}, #{registration_date}, #{open_time}, #{close_time}, #{tel_number}, #{request_user_id}, #{status})
+		VALUES (#{name}, #{road_address}, #{lot_address}, CURRENT_DATE, #{open_time}, #{close_time}, #{tel_number}, #{request_user_id}, #{status})
 	</insert>
-
+	
+	
+	<!-- 승낙 대기중인 신청 목록 -->
 	<select id="findAllPending" resultType="com.boot.dto.RequestDTO">
 		SELECT * FROM repair_shop_request WHERE status = 'PENDING' ORDER BY id DESC
 	</select>
 
+	<!-- 신청 승낙 -->
 	<update id="updateStatus">
 		UPDATE repair_shop_request SET status = #{status} WHERE id = #{id}
 	</update>
@@ -22,7 +26,6 @@
 	
 	<select id="findById" parameterType="int" resultType="com.boot.dto.RequestDTO">
 		SELECT * FROM repair_shop_request WHERE id = #{id}
-
 	</select>
 
 </mapper>
