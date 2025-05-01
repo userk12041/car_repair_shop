@@ -8,4 +8,6 @@ import com.boot.dto.UserDTO;
 public interface UserDAO {
 	void register(UserDTO userDTO);
 	UserDTO findByUserId(String userId);
+	int countByUserId(String userId);
+    int countByNickname(String nickname);
 }

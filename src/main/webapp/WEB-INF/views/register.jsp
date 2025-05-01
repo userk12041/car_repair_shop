@@ -1,206 +1,311 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>회원 가입</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-    let isIdChecked = false;
-    let lastCheckedId = "";
-    let isNickChecked = false;
-    let lastCheckedNick = "";
-
-    function checkId() {
-        const userId = $("#user_id").val().trim();
-        const msgEl = $("#idCheckMsg");
-
-        if (userId === "") {
-            msgEl.text("아이디를 입력해주세요.").css("color", "red");
-            isIdChecked = false;
-            return;
-        }
-
-        fetch("idCheck?user_id=" + encodeURIComponent(userId))
-            .then(res => res.text())
-            .then(data => {
-                if (data === "usable") {
-                    msgEl.text("사용 가능한 아이디입니다.").css("color", "green");
-                    isIdChecked = true;
-                    lastCheckedId = userId;
-                } else {
-                    msgEl.text("이미 사용되고 있는 아이디입니다.").css("color", "red");
-                    isIdChecked = false;
-                }
-            })
-            .catch(() => msgEl.text("오류가 발생했습니다.").css("color", "red"));
+  <title>회원 가입</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <style>
+    :root {
+      --bg-main: #ffffff;
+      --text-main: #222222;
+      --card-bg: #f9f9f9;
+      --card-border: #dddddd;
     }
 
-    function checkNick() {
-        const nickname = $("#nickname").val().trim();
-        const msgEl = $("#nickCheckMsg");
-
-        if (nickname === "") {
-            msgEl.text("닉네임을 입력해주세요.").css("color", "red");
-            isNickChecked = false;
-            return;
-        }
-
-        fetch("nickCheck?nickname=" + encodeURIComponent(nickname))
-            .then(res => res.text())
-            .then(data => {
-                if (data === "usable") {
-                    msgEl.text("사용 가능한 닉네임입니다.").css("color", "green");
-                    isNickChecked = true;
-                    lastCheckedNick = nickname;
-                } else {
-                    msgEl.text("이미 사용되고 있는 닉네임입니다.").css("color", "red");
-                    isNickChecked = false;
-                }
-            })
-            .catch(() => msgEl.text("오류가 발생했습니다.").css("color", "red"));
+    body {
+      margin: 0;
+      padding-top: 100px; /* 헤더 높이 고려 */
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
 
-    function validateForm() {
-        const userId = $("#user_id").val().trim();
-        const nick = $("#nickname").val().trim();
-        const password = $("#password").val().trim();
-        const passwordCheck = $("#passwordCheck").val().trim();
-        const phone = $("#phone_number").val().trim();
-        const email = $("#email").val().trim();
-		
-		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,15}$/;
-		const phoneRegex = /^010-\d{4}-\d{4}$/;
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-/**
-        if (!isIdChecked || userId !== lastCheckedId) {
-            alert("아이디 중복 확인을 완료해주세요.");
-            $("#user_id").focus();
-            return false;
-        }
-
-        if (!isNickChecked || nick !== lastCheckedNick) {
-            alert("닉네임 중복 확인을 완료해주세요.");
-            $("#nickname").focus();
-            return false;
-        }
-			**/
-
-        if (password.length < 4 || password.length > 20) {
-            alert("비밀번호는 4~20자 사이로 입력해주세요.");
-            $("#password").focus();
-            return false;
-        }
-
-        if (password !== passwordCheck) {
-            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            $("#passwordCheck").focus();
-            return false;
-        }
-
-		if (!passwordRegex.test(password)) {
-	        alert("비밀번호는 8~15자리이며, 영문자, 숫자, 특수문자를 각각 최소 1개 이상 포함해야 합니다.");
-	        document.getElementById("password").focus();
-	        return false;
-	    }
-
-	    if (password !== passwordCheck) {
-	        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-	        document.getElementById("passwordCheck").focus();
-	        return false;
-	    }
-
-	    if (!phoneRegex.test(phone)) {
-	        alert("전화번호는 '010-1234-5678' 형식으로 입력해주세요.");
-	        document.getElementById("phone_number").focus();
-	        return false;
-	    }
-
-	    if (!emailRegex.test(email)) {
-	        alert("올바른 이메일 형식을 입력해주세요.");
-	        document.getElementById("email").focus();
-	        return false;
-	    }
-
-        return true;
+    /* 헤더 */
+    #header {
+      width: 100%;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
     }
 
-    $(document).ready(function() {
-        $('.toggle-pw').on('click', function() {
-            const input = $(this).prev('input');
-            const type = input.attr('type') === 'password' ? 'text' : 'password';
-            input.attr('type', type);
-            $(this).toggleClass('fa-eye fa-eye-slash');
-        });
-    });
-</script>
-<!--<style>-->
-<!--    .form-row { margin-bottom: 10px; }-->
-<!--    .check-btn { margin-left: 10px; padding: 5px 10px; cursor: pointer; }-->
-<!--    .pw-wrap { position: relative; display: flex; align-items: center; }-->
-<!--    .pw-wrap input { padding-right: 30px; }-->
-<!--    .pw-wrap i { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer; }-->
-<!--    #idCheckMsg, #nickCheckMsg { font-size: 0.9em; margin-top: 5px; display: block; }-->
-<!--</style>-->
+    #logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    #logo img {
+      height: 80px;
+      width: 240px;
+      cursor: pointer;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--text-main);
+      font-size: 26px;
+    }
+
+    .register-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 30px;
+      width: 400px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .form-row {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .form-row label {
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: var(--text-main);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #43a047;
+    }
+
+    .pw-wrap {
+      position: relative;
+    }
+
+    .pw-wrap i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .check-btn {
+      margin-top: 6px;
+      width: 100%;
+      padding: 8px;
+      font-size: 0.9em;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #idCheckMsg, #nickCheckMsg {
+      font-size: 0.85em;
+      margin-top: 4px;
+      height: 16px;
+    }
+
+    ::placeholder { color: #aaa; }
+  </style>
 </head>
 <body>
-    <h1>회원 가입</h1>
-    <div class="register-card">
-        <form method="post" action="registerOk" onsubmit="return validateForm()">
-            <div class="form-row" style="position: relative;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <label for="user_id">아이디</label>
-<!--                    <button type="button" onclick="checkId()" class="check-btn">중복 확인</button>-->
-                </div>
-                <input type="text" name="user_id" id="user_id" required>
-                <span id="idCheckMsg"></span>
-            </div>
 
-            <div class="form-row">
-                <label for="password">암호</label>
-                <div class="pw-wrap">
-                    <input type="password" name="password" id="password" required>
-                    <i class="fa fa-eye toggle-pw"></i>
-                </div>
-            </div>
+<!-- ✅ 헤더 영역 -->
+<div id="header">
+  <div id="logo">
+    <img alt="logo_img" src="/resources/images/logo2.png" onclick="location.href='/main'">
+  </div>
+</div>
 
-            <div class="form-row">
-                <label for="passwordCheck">암호 확인</label>
-                <div class="pw-wrap">
-                    <input type="password" name="passwordCheck" id="passwordCheck" required>
-                    <i class="fa fa-eye toggle-pw"></i>
-                </div>
-            </div>
-
-            <div class="form-row" style="position: relative;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <label for="nickname">닉네임</label>
-<!--                    <button type="button" onclick="checkNick()" class="check-btn">중복 확인</button>-->
-                </div>
-                <input type="text" name="nickname" id="nickname" required>
-                <span id="nickCheckMsg"></span>
-            </div>
-
-            <div class="form-row">
-                <label for="phone_number">전화번호</label>
-                <input type="text" name="phone_number" id="phone_number" placeholder="010-1234-5678" required>
-            </div>
-
-            <div class="form-row">
-                <label for="email">이메일</label>
-                <input type="text" name="email" id="email" required>
-            </div>
-
-            <div class="form-row">
-                <label for="address">주소</label>
-                <input type="text" name="address" id="address">
-            </div>
-
-            <div class="form-row">
-                <input type="submit" value="등록">
-            </div>
-        </form>
+<!-- ✅ 본문 영역 -->
+<h1>회원 가입</h1>
+<div class="register-card">
+  <form method="post" action="registerOk" onsubmit="return validateForm()">
+    <div class="form-row">
+      <label for="user_id">아이디</label>
+      <input type="text" name="user_id" id="user_id" required>
+      <button type="button" onclick="checkId()" class="check-btn">중복 확인</button>
+      <span id="idCheckMsg"></span>
     </div>
+
+    <div class="form-row">
+      <label for="password">비밀번호</label>
+      <div class="pw-wrap">
+        <input type="password" name="password" id="password" required>
+        <i class="fa fa-eye toggle-pw"></i>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="passwordCheck">비밀번호 확인</label>
+      <div class="pw-wrap">
+        <input type="password" name="passwordCheck" id="passwordCheck" required>
+        <i class="fa fa-eye toggle-pw"></i>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="nickname">닉네임</label>
+      <input type="text" name="nickname" id="nickname" required>
+      <button type="button" onclick="checkNick()" class="check-btn">중복 확인</button>
+      <span id="nickCheckMsg"></span>
+    </div>
+
+    <div class="form-row">
+      <label for="phone_number">전화번호</label>
+      <input type="text" name="phone_number" id="phone_number" placeholder="010-1234-5678" required>
+    </div>
+
+    <div class="form-row">
+      <label for="email">이메일</label>
+      <input type="text" name="email" id="email" required>
+    </div>
+
+    <div class="form-row">
+      <label for="address">주소</label>
+      <input type="text" name="address" id="address">
+    </div>
+
+    <div class="form-row">
+      <input type="submit" value="등록">
+    </div>
+  </form>
+</div>
+
+<script>
+  let isIdChecked = false;
+  let lastCheckedId = "";
+  let isNickChecked = false;
+  let lastCheckedNick = "";
+
+  function checkId() {
+    const userId = $("#user_id").val().trim();
+    const msgEl = $("#idCheckMsg");
+
+    if (!userId) {
+      msgEl.text("아이디를 입력하세요.").css("color", "red");
+      isIdChecked = false;
+      return;
+    }
+
+    $.ajax({
+      url: "/idCheck",
+      method: "GET",
+      data: { user_id: userId },
+      success: function (res) {
+        if (res === "usable") {
+          msgEl.text("사용 가능한 아이디입니다.").css("color", "green");
+          isIdChecked = true;
+          lastCheckedId = userId;
+        } else {
+          msgEl.text("이미 사용 중인 아이디입니다.").css("color", "red");
+          isIdChecked = false;
+        }
+      },
+      error: function () {
+        msgEl.text("서버 오류 발생").css("color", "red");
+        isIdChecked = false;
+      }
+    });
+  }
+
+  function checkNick() {
+    const nickname = $("#nickname").val().trim();
+    const msgEl = $("#nickCheckMsg");
+
+    if (!nickname) {
+      msgEl.text("닉네임을 입력하세요.").css("color", "red");
+      isNickChecked = false;
+      return;
+    }
+
+    $.ajax({
+      url: "/nickCheck",
+      method: "GET",
+      data: { nickname: nickname },
+      success: function (res) {
+        if (res === "usable") {
+          msgEl.text("사용 가능한 닉네임입니다.").css("color", "green");
+          isNickChecked = true;
+          lastCheckedNick = nickname;
+        } else {
+          msgEl.text("이미 사용 중인 닉네임입니다.").css("color", "red");
+          isNickChecked = false;
+        }
+      },
+      error: function () {
+        msgEl.text("서버 오류 발생").css("color", "red");
+        isNickChecked = false;
+      }
+    });
+  }
+
+  // 비밀번호 보기 toggle
+  $(document).ready(function () {
+    $('.toggle-pw').on('click', function () {
+      const input = $(this).prev('input');
+      const type = input.attr('type') === 'password' ? 'text' : 'password';
+      input.attr('type', type);
+      $(this).toggleClass('fa-eye fa-eye-slash');
+    });
+  });
+
+  // 선택 사항: 폼 제출 시 중복 체크 여부 확인
+  function validateForm() {
+    const userId = $("#user_id").val().trim();
+    const nickname = $("#nickname").val().trim();
+
+    if (!isIdChecked || userId !== lastCheckedId) {
+      alert("아이디 중복 확인을 완료해주세요.");
+      return false;
+    }
+
+    if (!isNickChecked || nickname !== lastCheckedNick) {
+      alert("닉네임 중복 확인을 완료해주세요.");
+      return false;
+    }
+
+    return true;
+  }
+</script>
+
+
 </body>
 </html>

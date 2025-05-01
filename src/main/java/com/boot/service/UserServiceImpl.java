@@ -29,4 +29,15 @@ public class UserServiceImpl implements UserService {
 	    return null;
 	}
 
+	@Override
+	public boolean isUserIdAvailable(String userId) {
+	    UserDAO userDao = sqlSession.getMapper(UserDAO.class);
+	    return userDao.countByUserId(userId) == 0;
+	}
+
+	@Override
+	public boolean isNicknameAvailable(String nickname) {
+	    UserDAO userDao = sqlSession.getMapper(UserDAO.class);
+	    return userDao.countByNickname(nickname) == 0;
+	}
 }
