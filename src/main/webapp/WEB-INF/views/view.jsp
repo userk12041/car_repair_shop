@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 
 <html>
 <head>
@@ -84,6 +86,10 @@
 		.stars {
 		    color: gold;
 		}
+		.review-edit-form {
+		    display: none;
+		    margin-top: 10px;
+		}
 		
 	</style>
 	
@@ -150,12 +156,13 @@
 						    (<fmt:formatDate value="${review.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" />)
 						</span>
 						<c:if test="${review.userId == sessionScope.loginId}">
-						    <!-- 수정 버튼 -->
-						    <form method="get" action="/view/update" style="display: inline;">
-						        <input type="hidden" name="id" value="${review.id}" />
-						        <input type="hidden" name="repairShopId" value="${shop.id}" />
-						        <button type="submit">수정</button>
-						    </form>
+							<!-- 수정 버튼 -->
+							<button 
+							    data-id="${review.id}" 
+							    data-content="${fn:escapeXml(review.content)}" 
+							    data-rating="${review.rating}" 
+							    onclick="editReviewFromButton(this)">수정
+							</button>
 						    <!-- 삭제 버튼 -->
 						    <form method="post" action="/view/delete" style="display: inline;">
 						        <input type="hidden" name="id" value="${review.id}" />
@@ -164,7 +171,32 @@
 						    </form>
 						</c:if>
                     </div>
-                    <div>${review.content}</div>
+					<div id="review_content_${review.id}">${review.content}</div>
+					<!-- 수정 폼 미완-->
+					<div id="editForm_${review.id}" class="review-edit-form">
+					    <form method="post" action="/review/update">
+					        <input type="hidden" name="id" value="${review.id}" />
+					        <input type="hidden" name="userId" value="${review.userId}" />
+					        <input type="hidden" name="repairShopId" value="${shop.id}" />
+
+					        <label>별점:
+					            <select name="rating" required>
+					                <c:forEach begin="1" end="5" var="i">
+					                    <option value="${i}" <c:if test="${i == review.rating}">selected</c:if>>
+					                        <c:forEach begin="1" end="${i}" var="s">★</c:forEach>
+					                    </option>
+					                </c:forEach>
+					            </select>
+					        </label><br/>
+
+					        <label>내용:<br/>
+					            <textarea name="content" rows="3" cols="40">${fn:escapeXml(review.content)}</textarea>
+					        </label><br/>
+
+					        <button type="submit">수정완료</button>
+					        <button type="button" onclick="cancelEdit(${review.id})">취소</button>
+					    </form>
+					</div>
                 </div>
             </c:forEach>
         </div>
@@ -189,6 +221,22 @@
 		function toggleReviewForm() {
 		    const form = document.getElementById('reviewForm');
 		    form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+		}
+	</script>
+	<script>
+		function editReviewFromButton(button) {
+		    const reviewId = button.getAttribute("data-id");
+	
+		    // 숨기기 전 모든 수정 폼 닫기
+		    document.querySelectorAll(".review-edit-form").forEach(el => el.style.display = "none");
+	
+		    const form = document.getElementById("editForm_" + reviewId);
+		    if (form) form.style.display = "block";
+		}
+	
+		function cancelEdit(reviewId) {
+		    const form = document.getElementById("editForm_" + reviewId);
+		    if (form) form.style.display = "none";
 		}
 	</script>
     <br/>

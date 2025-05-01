@@ -57,5 +57,20 @@ public class ReviewController {
         return "redirect:/repairShop/view?id=" + repairShopId; // 삭제 후, 해당 업체의 상세 페이지로 리다이렉트
     }
     
+    // 리뷰 수정 미완
+    @PostMapping("/review/update")
+    public String updateReview(@ModelAttribute ReviewDTO review,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        String loginId = (String) session.getAttribute("loginId");
+        if (loginId == null || !loginId.equals(review.getUserId())) {
+            redirectAttributes.addFlashAttribute("error", "수정 권한이 없습니다.");
+            return "redirect:/login";
+        }
+
+        reviewService.updateReview(review);
+        return "redirect:/repairShop/view?id=" + review.getRepairShopId();
+    }
+    
 }
 

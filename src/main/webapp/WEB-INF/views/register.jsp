@@ -27,6 +27,57 @@
       min-height: 100vh;
     }
 
+
+    function validateForm() {
+        const userId = $("#user_id").val().trim();
+        const nick = $("#nickname").val().trim();
+        const password = $("#password").val().trim();
+        const passwordCheck = $("#passwordCheck").val().trim();
+        const phone = $("#phone_number").val().trim();
+        const email = $("#email").val().trim();
+		
+		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,15}$/;
+		const phoneRegex = /^010-\d{4}-\d{4}$/;
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (password.length < 4 || password.length > 20) {
+            alert("비밀번호는 4~20자 사이로 입력해주세요.");
+            $("#password").focus();
+            return false;
+        }
+
+        if (password !== passwordCheck) {
+            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            $("#passwordCheck").focus();
+            return false;
+        }
+
+		if (!passwordRegex.test(password)) {
+	        alert("비밀번호는 8~15자리이며, 영문자, 숫자, 특수문자를 각각 최소 1개 이상 포함해야 합니다.");
+	        document.getElementById("password").focus();
+	        return false;
+	    }
+
+	    if (password !== passwordCheck) {
+	        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+	        document.getElementById("passwordCheck").focus();
+	        return false;
+	    }
+
+	    if (!phoneRegex.test(phone)) {
+	        alert("전화번호는 '010-1234-5678' 형식으로 입력해주세요.");
+	        document.getElementById("phone_number").focus();
+	        return false;
+	    }
+
+	    if (!emailRegex.test(email)) {
+	        alert("올바른 이메일 형식을 입력해주세요.");
+	        document.getElementById("email").focus();
+	        return false;
+	    }
+
+        return true;
+
     /* 헤더 */
     #header {
       width: 100%;
@@ -37,6 +88,7 @@
       top: 0;
       left: 0;
       z-index: 10;
+
     }
 
     #logo {
