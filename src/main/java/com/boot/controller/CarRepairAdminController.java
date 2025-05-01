@@ -23,28 +23,34 @@ public class CarRepairAdminController {
 
 	// 전체 조회 (페이지 + 페이징 블럭 처리)
 	@GetMapping("/admin/repairShop/list")
-	public String listRepairShops(@RequestParam(value = "page", defaultValue = "1") int page,
-									@RequestParam(value = "sortField", defaultValue = "id") String sortField,
-									@RequestParam(value = "order", defaultValue = "asc") String order,
-									Model model) {
+	public String listRepairShops(
+		@RequestParam(value = "page", defaultValue = "1") int page,
+		@RequestParam(value = "sortField", defaultValue = "id") String sortField,
+		@RequestParam(value = "order", defaultValue = "asc") String order,
+		@RequestParam(value = "name", required = false) String name,
+		Model model
+	) {
 		log.info("@# listRepairShops");
 
-		int pageSize = 20; // 한 페이지에 보여줄 데이터 수
-		int totalCount = carRepairService.getTotalCount(); // 전체 게시물 수
+		int pageSize = 20;
+
+		int totalCount = (name != null && !name.isEmpty())
+			? carRepairService.getSearchCount(name)
+			: carRepairService.getTotalCount();
+
 		int totalPage = (int) Math.ceil((double) totalCount / pageSize);
 
-		// 현재 페이지 기준 데이터 조회
-//		List<CarRepairDTO> list = carRepairService.getPagedShops(page, pageSize);
-		List<CarRepairDTO> list = carRepairService.getPagedShopsSorted(sortField, order, page, pageSize);
+		List<CarRepairDTO> list = (name != null && !name.isEmpty())
+			? carRepairService.getPagedSearchResults(name, sortField, order, page, pageSize)
+			: carRepairService.getPagedShopsSorted(sortField, order, page, pageSize);
 
-		// 페이지 블럭 계산
-		int pageBlock = 10; // 한 번에 보여줄 페이지 수
+		// 페이지 블럭 계산 동일
+		int pageBlock = 10;
 		int startPage = ((page - 1) / pageBlock) * pageBlock + 1;
 		int endPage = Math.min(startPage + pageBlock - 1, totalPage);
 		boolean hasPrev = startPage > 1;
 		boolean hasNext = endPage < totalPage;
 
-		// Model 전달
 		model.addAttribute("list", list);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPage", totalPage);
@@ -54,8 +60,9 @@ public class CarRepairAdminController {
 		model.addAttribute("hasNext", hasNext);
 		model.addAttribute("sortField", sortField);
 		model.addAttribute("order", order);
+		model.addAttribute("name", name); // 검색 유지
 
-		return "admin"; // => admin.jsp
+		return "admin";
 	}
 	
 	// 이름으로 검색
@@ -115,9 +122,10 @@ public class CarRepairAdminController {
 		return "admin";
 	}
 	
+	// 관리자 인증 페이지 호출
 	@GetMapping("/admin/auth")
 	public String adminAuth() {
-		return "admin_auth"; // → /WEB-INF/views/admin_auth.jsp 로 포워딩됨
+		return "admin_auth"; 
 	}	
 	
 }

@@ -48,19 +48,21 @@
 	<h1 class="mb-4 text-center">자동차 정비소 리스트 (관리자용)</h1>
 	
 	<!-- 검색 폼 -->
-	<form action="/admin/repairShop/search" method="get" class="mb-3">
+	<form action="/admin/repairShop/list" method="get" class="mb-3">
 		<div class="input-group">
-			<input type="text" name="name" class="form-control" placeholder="정비소 이름 검색">
+			<input type="text" name="name" value="${name}" class="form-control" placeholder="정비소 이름 검색">
 			<button class="btn btn-primary" type="submit">검색</button>
 		</div>
 	</form>
 
 	<!-- 정렬 버튼 -->
 	<div class="btn-group mb-4" role="group">
-		<a href="/admin/repairShop/list?sortField=registration_date&order=desc" class="btn btn-outline-secondary btn-sm">등록일 ↓</a>
-		<a href="/admin/repairShop/list?sortField=registration_date&order=asc" class="btn btn-outline-secondary btn-sm">등록일 ↑</a>
-		<a href="/admin/repairShop/list?sortField=name&order=asc" class="btn btn-outline-secondary btn-sm">정비소명 ↑</a>
-		<a href="/admin/repairShop/list?sortField=name&order=desc" class="btn btn-outline-secondary btn-sm">정비소명 ↓</a>
+		<!-- <a href="/admin/repairShop/list?sortField=registration_date&order=desc" class="btn btn-outline-secondary btn-sm">등록일 ↓</a> -->
+		<a href="/admin/repairShop/list?sortField=registration_date&order=desc&name=${name}" class="btn btn-outline-secondary btn-sm">등록일 ↓</a>
+		<!-- <a href="/admin/repairShop/list?sortField=registration_date&order=asc" class="btn btn-outline-secondary btn-sm">등록일 ↑</a> -->
+		<a href="/admin/repairShop/list?sortField=registration_date&order=asc&name=${name}" class="btn btn-outline-secondary btn-sm">등록일 ↑</a>
+		<a href="/admin/repairShop/list?sortField=name&order=asc&name=${name}" class="btn btn-outline-secondary btn-sm">정비소명 ↑</a>
+		<a href="/admin/repairShop/list?sortField=name&order=desc&name=${name}" class="btn btn-outline-secondary btn-sm">정비소명 ↓</a>
 	</div>
 
 	<!-- 정비소 리스트 테이블 -->
@@ -99,6 +101,7 @@
 	</table>
 
 	<!-- 페이징 -->
+	<!--
 	<div class="text-center my-4">
 		<c:if test="${hasPrev}">
 			<a href="?page=${startPage - 1}">&lt;</a>
@@ -115,6 +118,25 @@
 		</c:forEach>
 		<c:if test="${hasNext}">
 			<a href="?page=${endPage + 1}">&gt;</a>
+		</c:if>
+	</div>
+	-->
+	<div class="text-center my-4">
+		<c:if test="${hasPrev}">
+			<a href="?page=${startPage - 1}&sortField=${sortField}&order=${order}&name=${name}">&lt;</a>
+		</c:if>
+		<c:forEach var="i" begin="${startPage}" end="${endPage}">
+			<c:choose>
+				<c:when test="${i == currentPage}">
+					<strong>[${i}]</strong>
+				</c:when>
+				<c:otherwise>
+					<a href="?page=${i}&sortField=${sortField}&order=${order}&name=${name}">${i}</a>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+		<c:if test="${hasNext}">
+			<a href="?page=${endPage + 1}&sortField=${sortField}&order=${order}&name=${name}">&gt;</a>
 		</c:if>
 	</div>
 

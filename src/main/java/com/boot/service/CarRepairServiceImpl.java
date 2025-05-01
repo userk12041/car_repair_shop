@@ -13,10 +13,21 @@ public class CarRepairServiceImpl implements CarRepairService {
 
 	@Autowired
 	private CarRepairDAO carRepairDAO;
+	
+	@Override	//25.04.29 권준우
+	public List<CarRepairDTO> getPagedShops(int pageNo, int pageSize) {
+		int startRow = (pageNo - 1) * pageSize; // ex) 2페이지면 (2-1) * 20 = 20
+		return carRepairDAO.findAllPaged(startRow, pageSize);
+	}
 
 	@Override	//25.04.29 권준우
 	public List<CarRepairDTO> searchByName(String name) {
 		return carRepairDAO.findByName(name);
+	}
+	
+	@Override	//25.04.29 권준우
+	public CarRepairDTO getRepairShopById(int id) {
+		return carRepairDAO.findById(id);
 	}
 
 	@Override	//25.04.29 권준우
@@ -28,22 +39,6 @@ public class CarRepairServiceImpl implements CarRepairService {
 	public int deleteShop(int id) {
 		return carRepairDAO.deleteRepairShop(id);
 	}
-
-	@Override	//25.04.29 권준우
-	public List<CarRepairDTO> getPagedShops(int pageNo, int pageSize) {
-		int startRow = (pageNo - 1) * pageSize; // ex) 2페이지면 (2-1) * 20 = 20
-		return carRepairDAO.findAllPaged(startRow, pageSize);
-	}
-	
-	@Override	//25.04.29 권준우
-	public CarRepairDTO getRepairShopById(int id) {
-		return carRepairDAO.findById(id);
-	}
-	
-	@Override	//25.04.29 권준우
-	public int getTotalCount() {
-		return carRepairDAO.countShops();
-	}
 	
 	@Override	//25.04.29 권준우
 	public List<CarRepairDTO> getPagedShopsSorted(String sortField, String order, int page, int pageSize) {
@@ -51,6 +46,22 @@ public class CarRepairServiceImpl implements CarRepairService {
 		return carRepairDAO.findAllPagedSorted(sortField, order, startRow, pageSize);
 	}
 	
+	@Override	//25.05.01 권준우
+	public List<CarRepairDTO> getPagedSearchResults(String name, String sortField, String order, int page, int pageSize) {
+		int startRow = (page - 1) * pageSize;
+		return carRepairDAO.findPagedSearchSorted(name, sortField, order, startRow, pageSize);
+	}
+	
+	@Override	//25.04.29 권준우
+	public int getTotalCount() {
+		return carRepairDAO.countShops();
+	}
+
+	@Override	//25.05.01 권준우
+	public int getSearchCount(String name) {
+		return carRepairDAO.countSearchResults(name);
+	}
+
 	@Override	//25.04.29 권준우
 	public void insertShop(CarRepairDTO dto) {
 		carRepairDAO.insertShop(dto);
