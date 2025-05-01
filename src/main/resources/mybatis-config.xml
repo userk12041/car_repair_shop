@@ -8,5 +8,6 @@
 		<mapper resource="mybatis/mappers/CarRepairMapper.xml"/>
 		<mapper resource="mybatis/mappers/UserMapper.xml"/>
 		<mapper resource="mybatis/mappers/ReviewMapper.xml"/>
+<!--		<mapper resource="mybatis/mappers/RequestMapper.xml"/>-->
 	</mappers>
 </configuration>

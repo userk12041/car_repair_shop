@@ -10,6 +10,13 @@
         ORDER BY createdAt DESC
     </select>
 
+	<insert id="insertReview"> 
+		INSERT INTO review (repairShopId, userId, rating, content) 
+		VALUES (#{repairShopId}, #{userId}, #{rating}, #{content}) 
+	</insert>
+	<delete id="deleteReview" parameterType="int"> 
+		DELETE FROM review WHERE id = #{reviewId} 
+	</delete>
 <!--	<select id="getReviewsByShopIdPaging" parameterType="map" resultType="com.boot.dto.ReviewDTO">-->
 <!--	    SELECT * FROM review-->
 <!--	    WHERE repairShopId = #{repairShopId}-->
