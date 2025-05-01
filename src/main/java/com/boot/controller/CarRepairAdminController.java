@@ -113,5 +113,11 @@ public class CarRepairAdminController {
 		model.addAttribute("sortField", sortField);
 		model.addAttribute("order", order);
 		return "admin";
+	}
+	
+	@GetMapping("/admin/auth")
+	public String adminAuth() {
+		return "admin_auth"; // → /WEB-INF/views/admin_auth.jsp 로 포워딩됨
 	}	
+	
 }
