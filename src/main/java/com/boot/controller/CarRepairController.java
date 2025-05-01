@@ -1,5 +1,7 @@
 package com.boot.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -88,5 +90,12 @@ public class CarRepairController {
 	@GetMapping("/main")
 	public String mainPage() {
 		return "main";
+	}
+	
+	// 테스트용 세션 초기화 메서드
+	@GetMapping("/session/reset")
+	public String resetSession(HttpSession session) {
+		session.invalidate(); // 세션 초기화
+		return "redirect:/main"; // 메인 페이지로 리다이렉트
 	}
 }
