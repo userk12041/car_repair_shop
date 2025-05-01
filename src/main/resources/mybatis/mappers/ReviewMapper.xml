@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.ReviewDAO">
+
+    <select id="getReviewsByShopId" resultType="com.boot.dto.ReviewDTO">
+        SELECT * FROM review
+        WHERE repairShopId = #{ShopId}
+        ORDER BY createdAt DESC
+    </select>
+
+<!--	<select id="getReviewsByShopIdPaging" parameterType="map" resultType="com.boot.dto.ReviewDTO">-->
+<!--	    SELECT * FROM review-->
+<!--	    WHERE repairShopId = #{repairShopId}-->
+<!--	    ORDER BY createdAt DESC-->
+<!--	    LIMIT #{limit} OFFSET #{offset}-->
+<!--	</select>-->
+	
+<!--	<select id="countReviewsByShopId" parameterType="int" resultType="int">-->
+<!--	    SELECT COUNT(*) FROM review WHERE repairShopId = #{repairShopId}-->
+<!--	</select>-->
+
+</mapper>

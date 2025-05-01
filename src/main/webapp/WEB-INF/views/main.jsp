@@ -11,6 +11,72 @@
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=253dd4f3250d0399b6c6cd73a5596951&libraries=clusterer"></script>
 
 <style>
+<<<<<<< HEAD
+=======
+:root {
+  --bg-main: linear-gradient(to top, #ff0033 20%, #1b1b2f 70%, #0a0a1a 100%);
+  --text-main: #ffffff;
+  --card-bg: rgba(60, 60, 90, 0.7);
+  --card-border: #4caf50;
+  --beam-color: linear-gradient(to bottom, #ff0033, transparent);
+}
+
+/* .top-button {
+  position: absolute;
+  top: 20px;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  z-index: 9999;
+  cursor: pointer;
+  color: white;
+  background-color: rgba(70, 70, 200, 0.7);
+  text-decoration: none;
+  transition: 0.3s;
+}
+.top-button:hover {
+  background-color: #4455ee;
+} */
+
+.bottom-button {
+  position: absolute;
+  bottom: 20px;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  z-index: 9999;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+.top-right a, .top-right span {
+  margin-left: 10px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+.top-right a:hover {
+  text-decoration: underline;
+}
+
+body.light-mode {
+  --bg-main: linear-gradient(to top, #e0f7fa 0%, #d0e9f5 100%);
+  --text-main: #1b3a57;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: #5c9ead;
+  --beam-color: linear-gradient(to bottom, #5c9ead, transparent);
+}
+>>>>>>> d2459b17f7fe3b2f9591a4b9a3f06eb63278f8bc
 body, html {
   margin: 0; padding: 0; height: 100%;
   font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
@@ -32,6 +98,27 @@ body, html {
 </head>
 
 <body>
+<<<<<<< HEAD
+=======
+	<%@ include file="header\header.jsp" %>
+	<div class="top-right">
+	  <c:choose>
+	    <c:when test="${empty sessionScope.loginId}">
+	      <a href="/login">로그인</a>
+	      <a href="/register">회원가입</a>
+	    </c:when>
+	    <c:otherwise>
+	      <span>${sessionScope.loginId}님</span>
+	      <a href="/logout">로그아웃</a>
+	    </c:otherwise>
+	  </c:choose>
+	</div>
+
+<button id="playMusic" class="bottom-button">🎵 음악 재생</button>
+<button id="toggleMode" class="bottom-button">🌗 모드 변경</button>
+
+
+>>>>>>> d2459b17f7fe3b2f9591a4b9a3f06eb63278f8bc
 <div class="container">
   <div class="list-panel" id="shopList">
     <h2>전국 자동차 정비업체</h2>
