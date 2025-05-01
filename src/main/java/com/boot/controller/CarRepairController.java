@@ -85,11 +85,6 @@ public class CarRepairController {
 		return "redirect:/admin/repairShop/list"; // 저장 끝나면 관리자 리스트로 이동
 	}
 	
-	@GetMapping("/map")
-	public String mapPage() {
-		return "map";  // /WEB-INF/views/map.jsp 로 이동
-	}	
-	
 	@GetMapping("/main")
 	public String mainPage() {
 		return "main";

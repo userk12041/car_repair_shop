@@ -34,7 +34,7 @@
 <body>
 	<div id="header">
 	    <div id="logo">
-	        <img alt="logo_img" src="/resources/images/logo2.png" onclick="javascript:location='/map'">
+	        <img alt="logo_img" src="/resources/images/logo2.png" onclick="javascript:location='/main'">
 	    </div>
 	</div>
 </body>
