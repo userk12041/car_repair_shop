@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.boot.dto.UserDTO;
 import com.boot.service.UserService;
@@ -94,5 +95,21 @@ public class UserController {
         session.invalidate();
         return "redirect:/main";
     }
+    
+    @PostMapping("/admin/auth/verify")
+    public String verifyAdmin(@RequestParam String adminPassword, HttpSession session, RedirectAttributes redirectAttrs) {
+    	
+    	final String ADMIN_SECRET = "1234"; // 테스트용 관리자 비밀번호
+
+    	if (ADMIN_SECRET.equals(adminPassword)) {
+    		// 인증 성공 → 세션 권한을 ADMIN으로 변경
+    		session.setAttribute("loginRole", "ADMIN");
+    		return "redirect:/admin/repairShop/list"; // 관리자 페이지로 이동
+    	} else {
+    		// 인증 실패 → 에러 메시지와 함께 인증 페이지로 리다이렉트
+    		redirectAttrs.addFlashAttribute("errorMsg", "관리자 비밀번호가 올바르지 않습니다.");
+    		return "redirect:/admin/auth";
+    	}
+    }    
 
 }
