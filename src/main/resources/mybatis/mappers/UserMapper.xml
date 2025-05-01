@@ -11,5 +11,11 @@
     <select id="findByUserId" parameterType="string" resultType="com.boot.dto.UserDTO">
 	    SELECT * FROM user WHERE userid = #{userId}
 	</select>
+	<select id="countByUserId" resultType="int">
+  SELECT COUNT(*) FROM users WHERE user_id = #{userId}
+</select>
 
+<select id="countByNickname" resultType="int">
+  SELECT COUNT(*) FROM users WHERE nickname = #{nickname}
+</select>
 </mapper>
