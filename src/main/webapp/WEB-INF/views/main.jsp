@@ -65,6 +65,22 @@ body, html {
 </style>
 </head>
 <body>
+	
+<!-- 메인 페이지 내 관리자 이동 버튼 -->
+<div class="text-center mt-4">
+	<c:choose>
+		<c:when test="${sessionScope.loginRole == 'ADMIN'}">
+			<a href="/admin/repairShop/list" class="btn btn-danger">관리자 페이지</a>
+		</c:when>
+		<c:otherwise>
+			<a href="/admin/auth" class="btn btn-outline-danger">관리자 인증</a>
+		</c:otherwise>
+	</c:choose>
+</div>
+
+<!-- 테스트용 세션 초기화 버튼. 실제로 파일 제출시에는 주석처리 하기. -->
+<a href="/session/reset" class="btn btn-sm btn-outline-warning">세션 초기화 (완성 버전에서는 없애야함)</a>
+	
 <div class="container">
   <div class="list-panel" id="shopList">
     <h2 style="text-align: center;">전국 자동차 정비업체</h2>

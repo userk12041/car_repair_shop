@@ -2,12 +2,15 @@ package com.boot.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.boot.dto.CarRepairDTO;
 import com.boot.service.CarRepairService;
@@ -21,7 +24,7 @@ public class CarRepairAdminController {
 	@Autowired
 	private CarRepairService carRepairService;
 
-	// 전체 조회 (페이지 + 페이징 블럭 처리)
+	// 관리자 페이지 조회 (페이지 + 페이징 블럭 처리)
 	@GetMapping("/admin/repairShop/list")
 	public String listRepairShops(
 		@RequestParam(value = "page", defaultValue = "1") int page,
@@ -126,6 +129,23 @@ public class CarRepairAdminController {
 	@GetMapping("/admin/auth")
 	public String adminAuth() {
 		return "admin_auth"; 
-	}	
+	}
+	
+	// 관리자 검증
+	@PostMapping("/admin/auth/verify")
+	public String verifyAdmin(@RequestParam String adminPassword, HttpSession session, RedirectAttributes redirectAttrs) {
+		// 테스트용 관리자 비밀번호
+		final String ADMIN_SECRET = "1234";
+
+		if (ADMIN_SECRET.equals(adminPassword)) {
+			// 인증 성공 → 세션 권한을 ADMIN으로 변경
+			session.setAttribute("loginRole", "ADMIN");
+			return "redirect:/admin/repairShop/list"; // 관리자 페이지로 이동
+		} else {
+			// 인증 실패 → 에러 메시지와 함께 인증 페이지로 리다이렉트
+			redirectAttrs.addFlashAttribute("errorMsg", "관리자 비밀번호가 올바르지 않습니다.");
+			return "redirect:/admin/auth";
+		}
+	}
 	
 }
