@@ -10,4 +10,7 @@ public interface UserDAO {
 	UserDTO findByUserId(String userId);
 	int countByUserId(String userId);
     int countByNickname(String nickname);
+	String findUserIdByEmailAndPhone(String email, String phone);
+	int countByUserIdAndEmail(String userId, String email);
+	void updatePassword(String userId, String newPassword);
 }
