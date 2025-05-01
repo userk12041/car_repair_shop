@@ -73,19 +73,6 @@
 		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,15}$/;
 		const phoneRegex = /^010-\d{4}-\d{4}$/;
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-/**
-        if (!isIdChecked || userId !== lastCheckedId) {
-            alert("아이디 중복 확인을 완료해주세요.");
-            $("#user_id").focus();
-            return false;
-        }
-
-        if (!isNickChecked || nick !== lastCheckedNick) {
-            alert("닉네임 중복 확인을 완료해주세요.");
-            $("#nickname").focus();
-            return false;
-        }
-			**/
 
         if (password.length < 4 || password.length > 20) {
             alert("비밀번호는 4~20자 사이로 입력해주세요.");
