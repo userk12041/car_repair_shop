@@ -16,19 +16,22 @@ public class ReviewServiceImpl implements ReviewService {
     private SqlSession sqlSession;
 
     @Override
-//    public List<ReviewDTO> getReviewsByShopId(int repairShopId, int page, int size) {
     public List<ReviewDTO> getReviewsByShopId(int ShopId) {
         ReviewDAO reviewDAO = sqlSession.getMapper(ReviewDAO.class);
-//        int offset = (page - 1) * size;
-//        return reviewDAO.getReviewsByShopIdPaging(ShopId, offset, size);
         return reviewDAO.getReviewsByShopId(ShopId);
     }
+    
+    @Override
+    public void insertReview(ReviewDTO review) {
+        ReviewDAO reviewDAO = sqlSession.getMapper(ReviewDAO.class);
+        reviewDAO.insertReview(review);
+    }
 
-//    @Override
-//    public int countReviewsByShopId(int repairShopId) {
-//        ReviewDAO reviewDAO = sqlSession.getMapper(ReviewDAO.class);
-//        return reviewDAO.countReviewsByShopId(repairShopId);
-//    }
+    @Override
+    public void deleteReview(int reviewId) {
+        ReviewDAO dao = sqlSession.getMapper(ReviewDAO.class);
+        dao.deleteReview(reviewId);
+    }
 }
 
 

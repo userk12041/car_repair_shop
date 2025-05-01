@@ -116,6 +116,7 @@
         FROM repair_shop
     </select>
     
+    <!--좌표 찍는 마커 쿼리--> 
     <select id="getCarRepairInBounds" resultType="com.boot.dto.CarRepairDTO">
     SELECT 
         id,
@@ -131,6 +132,19 @@
    	   FROM repair_shop
       WHERE latitude BETWEEN #{swLat} AND #{neLat}
         AND longitude BETWEEN #{swLng} AND #{neLng}
+	</select>
+	
+	<!--아이디 따라 정보 호출(상세보기)-->
+	<select id="getRepairById" resultType="com.boot.dto.CarRepairDTO">
+	    SELECT *
+	    FROM repair_shop
+	    WHERE id = #{id}
+	</select>
+	
+	<!--검색 키워드에 따라 리스트 호출-->
+	<select id="listSearchByName" resultType="com.boot.dto.CarRepairDTO">
+	    SELECT * FROM repair_shop
+	    WHERE name LIKE CONCAT('%', #{keyword}, '%')
 	</select>
 
 </mapper>

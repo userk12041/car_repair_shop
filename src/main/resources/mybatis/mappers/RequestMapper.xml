@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.boot.dao.RequestDAO">
+
+	<insert id="insertRequest">
+		INSERT INTO repair_shop_request
+		(name, road_address, lot_address, registration_date, open_time, close_time, tel_number, request_user_id, status)
+		VALUES (#{name}, #{road_address}, #{lot_address}, #{registration_date}, #{open_time}, #{close_time}, #{tel_number}, #{request_user_id}, #{status})
+	</insert>
+
+	<select id="findAllPending" resultType="com.boot.dto.RequestDTO">
+		SELECT * FROM repair_shop_request WHERE status = 'PENDING' ORDER BY id DESC
+	</select>
+
+	<update id="updateStatus">
+		UPDATE repair_shop_request SET status = #{status} WHERE id = #{id}
+	</update>
+
+	
+	<select id="findById" parameterType="int" resultType="com.boot.dto.RequestDTO">
+		SELECT * FROM repair_shop_request WHERE id = #{id}
+
+	</select>
+
+</mapper>
