@@ -68,35 +68,13 @@
 		LIMIT #{startRow}, #{rowCount}
 	</select>
 	
-	<!-- DB 저장 쿼리 25.04.29 권준우 -->
+	<!-- DB 저장 쿼리 -->
 	<insert id="insertShop" parameterType="com.boot.dto.CarRepairDTO">
 		INSERT INTO repair_shop
 		(name, road_address, lot_address, latitude, longitude, registration_date, open_time, close_time, tel_number)
 		VALUES
 		(#{name}, #{road_address}, #{lot_address}, #{latitude}, #{longitude}, #{registration_date}, #{open_time}, #{close_time}, #{tel_number})
-	</insert>
-	
-	<!-- 이름&주소로 찾기 25.04.30 권준우 -->
-	<select id="findByNameAndRoadAddress" resultType="com.boot.dto.CarRepairDTO">
-		SELECT * FROM repair_shop
-		WHERE name = #{name}
-		AND road_address = #{road_address}
-	</select>
-	
-	<!-- API 동기화 -> DB 갱신 25.04.30 권준우 -->
-	<update id="updateShop" parameterType="com.boot.dto.CarRepairDTO">
-		UPDATE repair_shop
-		SET lot_address = #{lot_address},
-			latitude = #{latitude},
-			longitude = #{longitude},
-			registration_date = #{registration_date},
-			open_time = #{open_time},
-			close_time = #{close_time},
-			tel_number = #{tel_number}
-		WHERE name = #{name}
-		AND road_address = #{road_address}
-	</update>
-	
+	</insert>		
     
     
     <select id="getAllCarRepairs" resultType="com.boot.dto.CarRepairDTO">
@@ -115,7 +93,7 @@
     </select>
     
     <select id="getCarRepairInBounds" resultType="com.boot.dto.CarRepairDTO">
-    	SELECT 
+    SELECT 
         id,
         name,
         road_address,
@@ -131,14 +109,4 @@
         AND longitude BETWEEN #{swLng} AND #{neLng}
 	</select>
 
-	<select id="getRepairById" resultType="com.boot.dto.CarRepairDTO">
-	    SELECT *
-	    FROM repair_shop
-	    WHERE id = #{id}
-	</select>
-	
-	<select id="listSearchByName" resultType="com.boot.dto.CarRepairDTO">
-	    SELECT * FROM repair_shop
-	    WHERE name LIKE CONCAT('%', #{keyword}, '%')
-	</select>
 </mapper>

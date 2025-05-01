@@ -21,186 +21,239 @@ body, html {
 }
 .container { display: flex; height: 100vh; z-index: 4; }
 .list-panel { width: 30%; overflow-y: auto; background: var(--card-bg); padding: 20px; box-sizing: border-box; border-right: 1px solid var(--card-border); }
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #f4f7fa;
+  border-radius: 30px;
+  padding: 5px 10px;
+  margin-bottom: 15px;
+}
+.search-bar input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  outline: none;
+}
+.search-bar button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #333;
+}
 .map-panel { width: 70%; background: transparent; position: relative; }
 .shop-card { 
-  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px;
-  padding: 15px; margin-bottom: 15px; transition: 0.3s; cursor: pointer;
+  background: #ffffff; 
+  border: 1px solid #e0e0e0; 
+  border-radius: 10px;
+  padding: 15px; 
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
-.shop-card:hover { background-color: var(--card-border); color: var(--bg-main); transform: translateY(-5px) scale(1.02); }
+.shop-card:hover { 
+  background-color: var(--card-border); 
+  color: var(--bg-main); 
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
 .shop-card h3, .shop-card p { margin: 0; font-size: 16px; }
 </style>
 </head>
-
 <body>
 <div class="container">
   <div class="list-panel" id="shopList">
     <h2 style="text-align: center;">전국 자동차 정비업체</h2>
-	<input type="text" id="searchKeyword" placeholder="업체명을 입력하세요" style="width:100%; padding:8px; margin-bottom:10px;">
-	<button onclick="searchShops()" style="width:100%; padding:8px;">검색</button>
+    <div class="search-bar">
+      <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+      <button id="searchBtn" type="button">🔍</button>
+      <button id="refreshBtn" type="button">🔄</button>
+    </div>
   </div>
-
   <div class="map-panel">
     <div id="map" style="width:100%; height:100%;"></div>
   </div>
 </div>
 
 <script>
-var map;
-var clusterer;
-var markers = [];
-var currentInfoWindow = null;
-	
-window.onload = function() {
-    var mapContainer = document.getElementById('map');
-    var mapOption = {
-        center: new kakao.maps.LatLng(36.5, 127.5), // 대한민국 중심
-        level: 13
-    };
+let map;
+let clusterer;
+let currentInfoWindow = null;
+let isSearchMode = false;
+let isProgrammaticMove = false;
 
-    map = new kakao.maps.Map(mapContainer, mapOption);
-	
-	clusterer = new kakao.maps.MarkerClusterer({
-	    map: map,
-	    averageCenter: true, // 클러스터 중심좌표 설정
-	    minLevel: 10 // 클러스터 할 최소 지도 레벨
-	});
+window.onload = function () {
+  const mapContainer = document.getElementById('map');
+  const mapOption = {
+    center: new kakao.maps.LatLng(36.5, 127.5),
+    level: 13
+  };
+  map = new kakao.maps.Map(mapContainer, mapOption);
+  clusterer = new kakao.maps.MarkerClusterer({
+    map: map,
+    averageCenter: true,
+    minLevel: 10
+  });
+  kakao.maps.event.addListener(map, 'idle', function () {
+    if (isProgrammaticMove) {
+      isProgrammaticMove = false;
+      return;
+    }
+    if (!isSearchMode) {
+      loadMarkers();
+    }
+  });
+  loadMarkers();
+  bindSearchEvents();
+};
 
-	    // ⭐ 지도 이동하거나 확대/축소할 때마다 호출
-	kakao.maps.event.addListener(map, 'idle', function() {
-	        loadMarkers();
-	    });
+function escapeHtml(text) {
+  if (!text) return "";
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
-	    loadMarkers(); // 처음에도 마커 불러오기
-	}
-	
-	function escapeHtml(text) {
-	    if (!text) return "";
-	    return text
-	        .replace(/&/g, "&amp;")
-	        .replace(/</g, "&lt;")
-	        .replace(/>/g, "&gt;");
-	}
-	
-	function loadMarkers() {
-	    var bounds = map.getBounds();
-	    var sw = bounds.getSouthWest();
-	    var ne = bounds.getNorthEast();
+function bindSearchEvents() {
+  $('#searchBtn').off().on('click', searchShops);
+  $('#searchKeyword').off().on('keydown', function (e) {
+    if (e.key === 'Enter') searchShops();
+  });
+  $('#refreshBtn').off().on('click', function () {
+    isSearchMode = false;
+    loadMarkers();
+  });
+}
 
-	    var swLat = sw.getLat();
-	    var swLng = sw.getLng();
-	    var neLat = ne.getLat();
-	    var neLng = ne.getLng();
+function loadMarkers() {
+  const bounds = map.getBounds();
+  const sw = bounds.getSouthWest();
+  const ne = bounds.getNorthEast();
+  const swLat = sw.getLat();
+  const swLng = sw.getLng();
+  const neLat = ne.getLat();
+  const neLng = ne.getLng();
+  clusterer.clear();
+  $('#shopList').html(`
+    <h2 style="text-align:center;">전국 자동차 정비업체</h2>
+    <div class="search-bar">
+      <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+      <button id="searchBtn" type="button">🔍</button>
+      <button id="refreshBtn" type="button">🔄</button>
+    </div>
+  `);
+  bindSearchEvents();
+  $.ajax({
+    url: `/api/repairShops?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}`,
+    method: 'GET',
+    success: function (data) {
+      const newMarkers = [];
+      const limitedData = data.slice(0, 2000);
+      limitedData.forEach((shop, index) => {
+        if (index < 100) {
+          $('#shopList').append(
+            '<div class="shop-card" data-index="' + index + '">' +
+            '<h3>' + escapeHtml(shop.name) + '</h3>' +
+            '<p>' + escapeHtml(shop.road_address) + '</p>' +
+            '</div>'
+          );
+        }
+        const content =
+          '<div style="padding:8px; font-size:13px; background:#fff; border:1px solid #888;">' +
+          '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
+          escapeHtml(shop.road_address) + '<br/>' +
+          '<a href="/repairShop/view?id=' + shop.id + '" style="float:right; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>' +
+          '</div>';
+        const infowindow = new kakao.maps.InfoWindow({ content });
+        const marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
+          title: shop.name
+        });
+        kakao.maps.event.addListener(marker, 'click', function () {
+          if (currentInfoWindow) currentInfoWindow.close();
+          infowindow.open(map, marker);
+          currentInfoWindow = infowindow;
+        });
+        newMarkers.push({ marker, infowindow });
+      });
+      clusterer.addMarkers(newMarkers.map(m => m.marker));
+      $('#shopList').on('click', '.shop-card', function () {
+        const index = $(this).data('index');
+        const { marker, infowindow } = newMarkers[index];
+        isProgrammaticMove = true;
+        map.setCenter(marker.getPosition());
+        if (currentInfoWindow) currentInfoWindow.close();
+        infowindow.open(map, marker);
+        currentInfoWindow = infowindow;
+      });
+    }
+  });
+}
 
-	    // 기존 마커 지우기
-	    clusterer.clear();
-
-	    // AJAX 호출
-	    $.ajax({
-	        url: `/api/repairShops?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}`,
-	        method: 'GET',
-	        success: function(data) {
-				console.log("받은 데이터:", data);
-	            var limitedData = data.slice(0, 2000); // 최대 500개 제한
-
-				var newMarkers = limitedData.map(function(shop) {
-					var content = '<div style="display:inline-block; padding:8px; font-size:13px; max-width:300px; background:#fff; border:1px solid #888; white-space:normal; word-break:break-word;">' +
-					              '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
-					              escapeHtml(shop.road_address) + '<br/>' +
-								  <input type="button" >+
-								  '<a href="/repairShop/view?id=' +shop.id+' " style="float:right; display:inline-block; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>'
-								  +
-					              '</div>';
-
-					var infowindow = new kakao.maps.InfoWindow({
-					    content: content
-					});
-
-					var marker = new kakao.maps.Marker({
-					    position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
-					    title: shop.name
-					});
-
-					kakao.maps.event.addListener(marker, 'click', function() {
-					    if (currentInfoWindow) {
-					        currentInfoWindow.close();
-					    }
-					    infowindow.open(map, marker);
-					    currentInfoWindow = infowindow;
-					});
-
-				    return marker;
-				});
-	            clusterer.addMarkers(newMarkers);
-	        },
-	        error: function(xhr, status, error) {
-	            console.error('업체 정보 불러오기 실패', error);
-	        }
-	    });
-	}
-	function searchShops() {
-	    var keyword = $('#searchKeyword').val().trim();
-	    if (!keyword) {
-	        loadMarkers(); // 검색어 없으면 전체 로딩
-	        return;
-	    }
-
-	    // 기존 마커/리스트 초기화
-	    clusterer.clear();
-	    $('#shopList').html(
-	        '<h2 style="text-align:center;">전국 자동차 정비업체</h2>' +
-	        '<input type="text" id="searchKeyword" placeholder="업체명을 입력하세요" style="width:100%; padding:8px; margin-bottom:10px;">' +
-	        '<button onclick="searchShops()" style="width:100%; padding:8px;">검색</button>'
-	    );
-
-	    // AJAX 검색
-	    $.ajax({
-	        url: "/api/repairShops/search?keyword=" + encodeURIComponent(keyword),
-	        method: 'GET',
-	        success: function(data) {
-	            const limitedData = data.slice(0, 500); // 검색 결과 제한
-
-	            const newMarkers = limitedData.map(shop => {
-	                // 리스트에 추가 (템플릿 리터럴 X, JSP 충돌 방지)
-	                $('#shopList').append(
-	                    '<div class="shop-card">' +
-	                        '<h3>' + escapeHtml(shop.name) + '</h3>' +
-	                        '<p>' + escapeHtml(shop.road_address) + '</p>' +
-	                    '</div>'
-	                );
-
-	                // 마커/인포윈도우 생성
-	                const content =
-	                    '<div style="display:inline-block; padding:8px; font-size:13px; max-width:300px; background:#fff; border:1px solid #888;">' +
-	                        '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
-	                        escapeHtml(shop.road_address) + '<br/>' +
-	                        '<a href="/repairShop/view?id=' + shop.id + '" style="float:right; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>' +
-	                    '</div>';
-
-	                const infowindow = new kakao.maps.InfoWindow({ content });
-
-	                const marker = new kakao.maps.Marker({
-	                    position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
-	                    title: shop.name
-	                });
-
-	                kakao.maps.event.addListener(marker, 'click', function () {
-	                    if (currentInfoWindow) currentInfoWindow.close();
-	                    infowindow.open(map, marker);
-	                    currentInfoWindow = infowindow;
-	                });
-
-	                return marker;
-	            });
-
-	            // 지도에 마커 추가
-	            clusterer.addMarkers(newMarkers);
-	        },
-	        error: function() {
-	            alert('검색 실패');
-	        }
-	    });
-	}
-	</script>
-
+function searchShops() {
+  const keyword = $('#searchKeyword').val().trim();
+  if (!keyword) {
+    isSearchMode = false;
+    loadMarkers();
+    return;
+  }
+  isSearchMode = true;
+  clusterer.clear();
+  $('#shopList').html(`
+    <h2 style="text-align:center;">전국 자동차 정비업체</h2>
+    <div class="search-bar">
+      <input type="text" id="searchKeyword" value="${keyword}" placeholder="검색어를 입력하세요">
+      <button id="searchBtn" type="button">🔍</button>
+      <button id="refreshBtn" type="button">🔄</button>
+    </div>
+  `);
+  bindSearchEvents();
+  $.ajax({
+    url: "/api/repairShops/search?keyword=" + encodeURIComponent(keyword),
+    method: 'GET',
+    success: function (data) {
+      const newMarkers = [];
+      const limitedData = data.slice(0, 500);
+      limitedData.forEach((shop, index) => {
+        $('#shopList').append(
+          '<div class="shop-card" data-index="' + index + '">' +
+          '<h3>' + escapeHtml(shop.name) + '</h3>' +
+          '<p>' + escapeHtml(shop.road_address) + '</p>' +
+          '</div>'
+        );
+        const content =
+          '<div style="padding:8px; font-size:13px; background:#fff; border:1px solid #888;">' +
+          '<strong>' + escapeHtml(shop.name) + '</strong><br/>' +
+          escapeHtml(shop.road_address) + '<br/>' +
+          '<a href="/repairShop/view?id=' + shop.id + '" style="float:right; margin-top:5px; padding:5px 10px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:4px; font-size:12px;">상세보기</a>' +
+          '</div>';
+        const infowindow = new kakao.maps.InfoWindow({ content });
+        const marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
+          title: shop.name
+        });
+        kakao.maps.event.addListener(marker, 'click', function () {
+          if (currentInfoWindow) currentInfoWindow.close();
+          infowindow.open(map, marker);
+          currentInfoWindow = infowindow;
+        });
+        newMarkers.push({ marker, infowindow });
+      });
+      clusterer.addMarkers(newMarkers.map(m => m.marker));
+      $('#shopList').on('click', '.shop-card', function () {
+        const index = $(this).data('index');
+        const { marker, infowindow } = newMarkers[index];
+        isProgrammaticMove = true;
+        map.setCenter(marker.getPosition());
+        if (currentInfoWindow) currentInfoWindow.close();
+        infowindow.open(map, marker);
+        currentInfoWindow = infowindow;
+      });
+    }
+  });
+}
+</script>
 </body>
 </html>

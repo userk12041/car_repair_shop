@@ -1,6 +1,6 @@
 package com.boot.dto;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +16,4 @@ public class ReviewDTO {
     private int rating;
     private String content;
     private Timestamp createdAt;
-
-    // Getters and Setters
 }

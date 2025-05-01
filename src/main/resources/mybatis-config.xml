@@ -7,7 +7,6 @@
 <!--	mybatis.mappers (패키지) 	-->
 		<mapper resource="mybatis/mappers/CarRepairMapper.xml"/>
 		<mapper resource="mybatis/mappers/UserMapper.xml"/>
-		<mapper resource="mybatis/mappers/RequestMapper.xml"/>
 		<mapper resource="mybatis/mappers/ReviewMapper.xml"/>
 	</mappers>
 </configuration>
