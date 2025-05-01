@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,17 +11,20 @@
 	    padding: 10px 20px;
 	    background-color: #ffffff;
 	    border-bottom: 1px solid #ddd;
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
 	}
 
 	#logo {
 	    text-decoration: none;
 	    display: inline-flex;
 	    align-items: center;
-		border: 1px;
 	}
 	#logo img {
 	    height: 80px;
-		width : 240px;
+	    width: 240px;
+	    cursor: pointer;
 	}
 	#logo span {
 	    font-size: 20px;
@@ -28,14 +32,34 @@
 	    color: #333;
 	    margin-left: 8px;
 	}
+
+	#auth-links {
+	    font-size: 16px;
+	}
+	#auth-links a {
+	    margin-left: 15px;
+	    text-decoration: none;
+	    color: #007bff;
+	}
 	</style>
-	
 </head>
 <body>
 	<div id="header">
 	    <div id="logo">
 	        <img alt="logo_img" src="/resources/images/logo2.png" onclick="javascript:location='/main'">
 	    </div>
+	    <div id="auth-links">
+	        <c:choose>
+	            <c:when test="${not empty sessionScope.loginId}">
+	                <span><strong>${sessionScope.loginId}</strong>님</span>
+	                <a href="/logout">로그아웃</a>
+	            </c:when>
+	            <c:otherwise>
+	                <a href="/login">로그인</a>
+	                <a href="/register">회원가입</a>
+	            </c:otherwise>
+	        </c:choose>
+	    </div>
 	</div>
 </body>
-</html>	
+</html>

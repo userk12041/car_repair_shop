@@ -24,4 +24,19 @@
     SELECT COUNT(*) FROM user WHERE nickname = #{nickname}
   </select>
 
+  <!-- ✅ 이메일 + 전화번호로 아이디 찾기 -->
+  <select id="findUserIdByEmailAndPhone" resultType="string">
+    SELECT userid FROM user WHERE email = #{email} AND phone_number = #{phone}
+  </select>
+
+  <!-- ✅ 아이디 + 이메일 매치 확인 -->
+  <select id="countByUserIdAndEmail" resultType="int">
+    SELECT COUNT(*) FROM user WHERE userid = #{userId} AND email = #{email}
+  </select>
+
+  <!-- ✅ 비밀번호 재설정 -->
+  <update id="updatePassword">
+    UPDATE user SET password = #{newPassword} WHERE userid = #{userId}
+  </update>
+
 </mapper>

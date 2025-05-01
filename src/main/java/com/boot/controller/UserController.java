@@ -96,9 +96,49 @@ public class UserController {
         session.invalidate();
         return "redirect:/main";
     }
-    
-    
-    
-    
+    @GetMapping("/find-id")
+    public String findIdForm() {
+        return "findId"; // findId.jsp
+    }
+
+    @PostMapping("/find-id")
+    public String findId(@RequestParam String email,
+                         @RequestParam String phone_number,
+                         Model model) {
+        String userId = userService.findUserIdByEmailAndPhone(email, phone_number);
+        if (userId != null) {
+            model.addAttribute("foundId", userId);
+        } else {
+            model.addAttribute("notFound", true);
+        }
+        return "findId";
+    }
+    @GetMapping("/find-password")
+    public String findPwForm() {
+        return "findPassword"; // findPassword.jsp
+    }
+
+    @PostMapping("/find-password")
+    public String findPw(@RequestParam String user_id,
+                         @RequestParam String email,
+                         Model model) {
+        boolean match = userService.verifyUserIdAndEmail(user_id, email);
+        if (match) {
+            model.addAttribute("userId", user_id);
+            return "resetPassword"; // 비밀번호 재설정 폼으로 이동
+        } else {
+            model.addAttribute("notFound", true);
+            return "findPassword";
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestParam String user_id,
+                                @RequestParam String newPassword) {
+        userService.updatePassword(user_id, newPassword);
+        return "redirect:/login";
+    }
+
+
 
 }
