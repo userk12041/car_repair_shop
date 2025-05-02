@@ -17,7 +17,6 @@
 	<delete id="deleteReview" parameterType="int"> 
 		DELETE FROM review WHERE id = #{reviewId} 
 	</delete>
-	<!--	리뷰 수정 미완-->
 	<update id="updateReview">
 	    UPDATE review
 	    SET rating = #{rating}, content = #{content}
