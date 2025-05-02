@@ -8,6 +8,6 @@ public interface ReviewDAO {
 	List<ReviewDTO> getReviewsByShopId(int repairShopId);
 	void insertReview(ReviewDTO review);
     void deleteReview(int reviewId);
-    void updateReview(ReviewDTO review); // 리뷰 수정 미완
+    void updateReview(ReviewDTO review);
 }
 

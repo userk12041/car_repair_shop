@@ -57,7 +57,6 @@ public class ReviewController {
         return "redirect:/repairShop/view?id=" + repairShopId; // 삭제 후, 해당 업체의 상세 페이지로 리다이렉트
     }
     
-    // 리뷰 수정 미완
     @PostMapping("/review/update")
     public String updateReview(@ModelAttribute ReviewDTO review,
                                HttpSession session,

@@ -32,7 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewDAO dao = sqlSession.getMapper(ReviewDAO.class);
         dao.deleteReview(reviewId);
     }
-    @Override // 리뷰 수정 미완
+    @Override
     public void updateReview(ReviewDTO review) {
         ReviewDAO dao = sqlSession.getMapper(ReviewDAO.class);
         dao.updateReview(review);
