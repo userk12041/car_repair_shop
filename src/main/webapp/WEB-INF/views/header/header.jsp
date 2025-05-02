@@ -50,8 +50,17 @@
 	    </div>
 	    <div id="auth-links">
 	        <c:choose>
-	            <c:when test="${not empty sessionScope.loginId}">
-	                <span><strong>${sessionScope.loginId}</strong>님</span>
+	            <c:when test="${not empty sessionScope.loginNickname}">
+	                <span><strong>${sessionScope.loginNickname}</strong>님</span>
+	                <a href="/repairShop/request">정비소 추가</a>
+					<c:choose>
+						<c:when test="${sessionScope.loginRole == 'ADMIN'}">
+	                		<a href="/admin/repairShop/list">정비소 관리</a>
+						</c:when>
+						<c:otherwise>
+							<a href="/admin/auth">관리자 인증</a>
+						</c:otherwise>
+					</c:choose>
 	                <a href="/logout">로그아웃</a>
 	            </c:when>
 	            <c:otherwise>

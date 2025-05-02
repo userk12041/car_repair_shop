@@ -12,7 +12,7 @@
 
 	<div class="d-grid gap-2 col-6 mx-auto">
 		<a href="/main" class="btn btn-primary">메인 페이지로 이동</a>
-		<a href="/admin/repairShop/requests" class="btn btn-secondary">신청 내역 목록 (관리자용)</a>
+<!--		<a href="/admin/repairShop/requests" class="btn btn-secondary">신청 내역 목록 (관리자용)</a>-->
 	</div>
 </div>
 
