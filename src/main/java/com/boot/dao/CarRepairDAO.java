@@ -39,11 +39,12 @@ public interface CarRepairDAO {
             @Param("order") String order,
             @Param("startRow") int startRow,
             @Param("rowCount") int rowCount);
-	void insertShop(CarRepairDTO dto);	// API -> DB 저장
-	int countShops();	// API 저장용
+	int countShops();	// 정렬에 필요
+	int countSearchResults(@Param("name") String name);	// 정렬에 필요
+
+	void insertShop(CarRepairDTO dto);	// 정비소 추가 (직접 추가, API 불러오기 등 사용)
 	
 	List<CarRepairDTO> findByNameAndRoadAddress(@Param("name") String name, @Param("road_address") String road_address);	// API 갱신
-	int updateShop(CarRepairDTO dto);	// API 갱신용
+	int updateShop(CarRepairDTO dto);	// 정비소 수정 (API 갱신용)
 	
-	int countSearchResults(@Param("name") String name);
 }

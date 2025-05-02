@@ -37,11 +37,10 @@ public class CarRepairAdminController {
 
 		int pageSize = 20;
 
+		//삼항 연산자를 통해 검색조건 유무에 따라 정렬시 다른 메소드 활용
 		int totalCount = (name != null && !name.isEmpty())
 			? carRepairService.getSearchCount(name)
 			: carRepairService.getTotalCount();
-
-		int totalPage = (int) Math.ceil((double) totalCount / pageSize);
 
 		List<CarRepairDTO> list = (name != null && !name.isEmpty())
 			? carRepairService.getPagedSearchResults(name, sortField, order, page, pageSize)
@@ -49,6 +48,7 @@ public class CarRepairAdminController {
 
 		// 페이지 블럭 계산 동일
 		int pageBlock = 10;
+		int totalPage = (int) Math.ceil((double) totalCount / pageSize);
 		int startPage = ((page - 1) / pageBlock) * pageBlock + 1;
 		int endPage = Math.min(startPage + pageBlock - 1, totalPage);
 		boolean hasPrev = startPage > 1;
