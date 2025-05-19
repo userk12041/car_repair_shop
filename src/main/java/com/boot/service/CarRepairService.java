@@ -22,4 +22,5 @@ public interface CarRepairService {
 
 	public void saveInitialRepairShopData();	// API -> DB 저장
 	SyncResultDTO syncFromAPI();	// API 동기화 -> DB 갱신
+	void incrementViewCount(int id); // 조회수 증가
 }

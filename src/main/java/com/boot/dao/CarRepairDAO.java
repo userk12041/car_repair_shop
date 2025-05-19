@@ -47,4 +47,6 @@ public interface CarRepairDAO {
 	List<CarRepairDTO> findByNameAndRoadAddress(@Param("name") String name, @Param("road_address") String road_address);	// API 갱신
 	int updateShop(CarRepairDTO dto);	// 정비소 수정 (API 갱신용)
 	
+	void incrementViewCount(int id); // 조회수 업데이트
+	
 }

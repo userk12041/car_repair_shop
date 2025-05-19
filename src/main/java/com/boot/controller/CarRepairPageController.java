@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.boot.dao.CarRepairDAO;
 import com.boot.dto.CarRepairDTO;
 import com.boot.dto.ReviewDTO;
+import com.boot.service.CarRepairService;
 import com.boot.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,13 @@ public class CarRepairPageController {
     private final CarRepairDAO carRepairDAO;
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private CarRepairService carRepairService;
 
     @GetMapping("/view")
     public String detailPage(@RequestParam("id") int id, HttpSession session, Model model) {
         CarRepairDTO shop = carRepairDAO.getRepairById(id);
+        carRepairService.incrementViewCount(id);
         List<ReviewDTO> reviews = reviewService.getReviewsByShopId(id);
         String userId = (String) session.getAttribute("loginId");
         log.info("Controller /view userId=>"+userId);

@@ -18,6 +18,7 @@ public class CarRepairDTO {
 	private String registration_date;
 	private String open_time;
 	private String close_time;	
-	private String tel_number;	
+	private String tel_number;
+	private int viewCount;
 	
 }
