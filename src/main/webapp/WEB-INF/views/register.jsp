@@ -326,7 +326,8 @@
     function sample4_execDaumPostcode(){
         new daum.Postcode({
             oncomplete: function(data) {
-               // 우편번호
+				//console.log(data);  // 전체 데이터 콘솔 출력
+                // 우편번호
                 $("#zipCode").val(data.zonecode);
                 // 도로명 및 지번주소
                 $("#address").val(data.roadAddress);

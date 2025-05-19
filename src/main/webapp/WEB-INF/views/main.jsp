@@ -192,7 +192,11 @@
               '<a href="/repairShop/view?id=' + shop.id + '" ' +
               'style="display: inline-block; padding: 8px 12px; background: #4CAF50; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; transition: background 0.3s;">' +
               '상세보기' +
-              '</a>' +
+              '</a> | ' +
+			  '<a href="https://map.kakao.com/link/to/' + encodeURIComponent(shop.name) + ',' + shop.latitude + ',' + shop.longitude + '" target="_blank" '
+			  +'style="display: inline-block; padding: 8px 12px; background: #3498db; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; transition: background 0.3s;">'+
+			  '길찾기' +
+		  	  '</a> | ' +
               '<a href="javascript:void(0)" onclick="closeInfoWindow()" ' +
               'style="display: inline-block; padding: 8px 12px; background: #e74c3c; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; margin-left: 8px; transition: background 0.3s;">' +
               '닫기' +
