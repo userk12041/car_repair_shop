@@ -1,6 +1,7 @@
 package com.boot.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -59,9 +60,9 @@ public class UserController {
         userDTO.setPhoneNumber(param.get("phone_number"));
         userDTO.setEmail(param.get("email"));
         userDTO.setRegion(param.get("address")); // 주소를 region 필드에 저장
-
+        userDTO.setRegionDetail(param.get("detailaddress"));
+        
         userService.register(userDTO);
-
         return "redirect:/login";
     }
     

@@ -19,4 +19,7 @@ public class UserDTO {
     private String region;
     private String role;
     private LocalDateTime registrationDate;
+    private Double latitude;
+    private Double longitude;
+    private String regionDetail;
 }
