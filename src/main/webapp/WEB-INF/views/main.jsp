@@ -190,15 +190,15 @@
               '<div style="font-size: 13px; color: #666; margin-bottom: 10px; line-height: 1.4;">' + escapeHtml(shop.road_address) + '</div>' +
               '<div style="display: flex; justify-content: space-between; align-items: center;">' +
               '<a href="/repairShop/view?id=' + shop.id + '" ' +
-              'style="display: inline-block; padding: 8px 12px; background: #4CAF50; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; transition: background 0.3s;">' +
+              'style="display: inline-block; padding: 8px 12px; background: #4CAF50; color: white; font-size: 12px; border-radius: 20px; text-decoration: none;">' +
               '상세보기' +
               '</a> | ' +
 			  '<a href="https://map.kakao.com/link/to/' + encodeURIComponent(shop.name) + ',' + shop.latitude + ',' + shop.longitude + '" target="_blank" '
-			  +'style="display: inline-block; padding: 8px 12px; background: #3498db; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; transition: background 0.3s;">'+
+			  +'style="display: inline-block; padding: 8px 12px; background: #3498db; color: white; font-size: 12px; border-radius: 20px; text-decoration: none;">'+
 			  '길찾기' +
 		  	  '</a> | ' +
               '<a href="javascript:void(0)" onclick="closeInfoWindow()" ' +
-              'style="display: inline-block; padding: 8px 12px; background: #e74c3c; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; margin-left: 8px; transition: background 0.3s;">' +
+              'style="display: inline-block; padding: 8px 12px; background: #e74c3c; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; margin-left: 8px;">' +
               '닫기' +
               '</a>' +
               '</div>' +

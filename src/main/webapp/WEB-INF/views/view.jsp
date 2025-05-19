@@ -9,7 +9,9 @@
 	
     <title>업체 상세정보</title>
 	<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=253dd4f3250d0399b6c6cd73a5596951&libraries=clusterer"></script>
-	
+	<script>
+	  const isLoggedIn = <%= session.getAttribute("loginId") != null %>;
+	</script>
 	<style>
 		body {
 		    font-family: 'Noto Sans KR', sans-serif;
@@ -111,7 +113,9 @@
         <div class="review-box">
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 			    <h3 style="margin: 0;">리뷰</h3>
-			    <button onclick="toggleReviewForm()">리뷰 쓰기</button>
+				<c:if test="${not hasReview}">
+				  <button onclick="toggleReviewForm()">리뷰 쓰기</button>
+				</c:if>
 			</div>
 			
 			<!-- 리뷰 작성 폼 (초기에는 숨김) -->
@@ -120,8 +124,8 @@
 		            <input type="hidden" name="repairShopId" value="${shop.id}" />
 
 		            <label>별점:
-		                <select name="rating" required>
-		                    <option value="">선택</option>
+		                <select name="rating" class="stars" required>
+		                    <!--<option value="">선택</option>-->
 		                    <option value="5">★★★★★</option>
 		                    <option value="4">★★★★☆</option>
 		                    <option value="3">★★★☆☆</option>
@@ -162,7 +166,7 @@
 							    onclick="editReviewFromButton(this)">수정
 							</button>
 						    <!-- 삭제 버튼 -->
-						    <form method="post" action="/view/delete" style="display: inline;">
+						    <form method="post" action="/view/delete" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
 						        <input type="hidden" name="id" value="${review.id}" />
 						        <input type="hidden" name="repairShopId" value="${shop.id}" />
 						        <button type="submit">삭제</button>
@@ -178,7 +182,7 @@
 					        <input type="hidden" name="repairShopId" value="${shop.id}" />
 
 					        <label>별점:
-					            <select name="rating" required>
+					            <select name="rating" class="stars" required>
 					                <c:forEach begin="1" end="5" var="i">
 					                    <option value="${i}" <c:if test="${i == review.rating}">selected</c:if>>
 					                        <c:forEach begin="1" end="${i}" var="s">★</c:forEach>
@@ -217,6 +221,10 @@
 	</script>
 	<script>
 		function toggleReviewForm() {
+			if(!isLoggedIn){
+				alert("로그인 후 이용하실 수 있습니다.")
+				return;
+			}
 		    const form = document.getElementById('reviewForm');
 		    form.style.display = (form.style.display === 'none') ? 'block' : 'none';
 		}

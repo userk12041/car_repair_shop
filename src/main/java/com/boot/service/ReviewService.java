@@ -9,5 +9,6 @@ public interface ReviewService {
     void insertReview(ReviewDTO review);
     void deleteReview(int reviewId);
     void updateReview(ReviewDTO review);
+    boolean hasReview(int shopId, String userId);
 }
 

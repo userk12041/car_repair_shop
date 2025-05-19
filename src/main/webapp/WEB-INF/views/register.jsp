@@ -198,14 +198,6 @@
       <input type="text" name="email" id="email" required>
     </div>
 
-<!--   <div class="form-row">
-     <label for="address">주소</label>
-     <div style="display: flex; align-items: center;">
-       <input type="text" name="address" id="address" readonly placeholder="주소 검색 후 자동 입력">
-       <button type="button" onclick="openKakaoPostcode()" class="check-btn" style="margin-left: 10px;">주소 검색</button>
-     </div>
-   </div>-->
-   <!--test-->
    <div class="form-row">
       <label for="address">주소</label>
         <div class="col-sm-6 mb-3 mb-sm-0">
@@ -326,7 +318,7 @@
     function sample4_execDaumPostcode(){
         new daum.Postcode({
             oncomplete: function(data) {
-				//console.log(data);  // 전체 데이터 콘솔 출력
+				console.log(data);  // 전체 데이터 콘솔 출력
                 // 우편번호
                 $("#zipCode").val(data.zonecode);
                 // 도로명 및 지번주소
@@ -337,7 +329,7 @@
 </script>
 <script type="text/javascript">
     function addrCheck() {
-        if($("#zipCode").val() == '' && $("#streetAdr").val() == ''){
+        if($("#zipCode").val() == '' && $("#address").val() == ''){
             alert("우편번호를 클릭하여 주소를 검색해주세요.");
             $("#zipCode").focus();
         }

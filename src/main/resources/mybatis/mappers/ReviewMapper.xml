@@ -22,5 +22,9 @@
 	    SET rating = #{rating}, content = #{content}
 	    WHERE id = #{id} AND userId = #{userId}
 	</update>
+	<select id="checkReviewByUserAndShop">
+		select count(*) from review
+		where userId = #{userId} and repairShopId = #{shopId}
+	</select>
 
 </mapper>
