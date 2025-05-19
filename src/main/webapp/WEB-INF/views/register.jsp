@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
-  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <style>
     :root {
       --bg-main: #ffffff;
@@ -198,11 +198,27 @@
       <input type="text" name="email" id="email" required>
     </div>
 
-    <div class="form-row">
+<!--   <div class="form-row">
+     <label for="address">주소</label>
+     <div style="display: flex; align-items: center;">
+       <input type="text" name="address" id="address" readonly placeholder="주소 검색 후 자동 입력">
+       <button type="button" onclick="openKakaoPostcode()" class="check-btn" style="margin-left: 10px;">주소 검색</button>
+     </div>
+   </div>-->
+   <!--test-->
+   <div class="form-row">
       <label for="address">주소</label>
-      <input type="text" name="address" id="address">
-    </div>
-
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <input type="text" class="form-control form-control-user"
+                   id="zipCode" name="zipCode" placeholder="우편번호" readonly onclick="sample4_execDaumPostcode()">
+        </div>
+       <div class="form-group">
+           <input type="text" class="form-control form-control-user" id="address" name="address" placeholder="도로명 주소" readonly>
+       </div>
+       <div class="form-group">
+           <input type="text" class="form-control form-control-user" id="detailaddress" name="detailaddress" placeholder="상세 주소" onclick="addrCheck()">
+       </div>
+   </div>
     <div class="form-row">
       <input type="submit" value="등록">
     </div>
@@ -303,7 +319,28 @@
     }
 
     return true;
-  }
+  } 
+</script>
+
+<script>
+    function sample4_execDaumPostcode(){
+        new daum.Postcode({
+            oncomplete: function(data) {
+               // 우편번호
+                $("#zipCode").val(data.zonecode);
+                // 도로명 및 지번주소
+                $("#address").val(data.roadAddress);
+            }
+        }).open();
+    }
+</script>
+<script type="text/javascript">
+    function addrCheck() {
+        if($("#zipCode").val() == '' && $("#streetAdr").val() == ''){
+            alert("우편번호를 클릭하여 주소를 검색해주세요.");
+            $("#zipCode").focus();
+        }
+    }
 </script>
 
 
