@@ -24,6 +24,8 @@ public class GeoUtil {
 
             int responseCode = conn.getResponseCode();
 
+//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            // 응답 체크
             BufferedReader br;
             if (responseCode == 200) {
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
@@ -31,7 +33,6 @@ public class GeoUtil {
                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
             }
             
-//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             String response = br.lines().collect(Collectors.joining());
 
             // 카카오 API 응답 JSON 콘솔 출력 test

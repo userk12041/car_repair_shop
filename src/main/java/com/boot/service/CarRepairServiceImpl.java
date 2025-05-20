@@ -2,6 +2,7 @@ package com.boot.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,9 +14,10 @@ import org.springframework.web.client.RestTemplate;
 import com.boot.dao.CarRepairDAO;
 import com.boot.dto.CarRepairDTO;
 import com.boot.dto.SyncResultDTO;
+import com.boot.util.GeoUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.boot.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -26,7 +28,9 @@ public class CarRepairServiceImpl implements CarRepairService {
 	private CarRepairDAO carRepairDAO;
 	
 	@Autowired
-	private RestTemplate restTemplate;	
+	private RestTemplate restTemplate;
+	@Autowired
+	private SqlSession sqlSession;
 	
 	@Override	//25.04.29 권준우
 	public List<CarRepairDTO> getPagedShops(int pageNo, int pageSize) {
@@ -78,9 +82,23 @@ public class CarRepairServiceImpl implements CarRepairService {
 
 	@Override	//25.04.29 권준우
 	public void insertShop(CarRepairDTO dto) {
+		 // 주소 -> 위도, 경도 변환
+        double[] latlng = GeoUtil.getLatLngFromAddress(dto.getRoad_address());
+
+        if (latlng != null) {
+        	dto.setLatitude(latlng[0]); // 위도
+        	dto.setLongitude(latlng[1]); // 경도
+        } else {
+            // 실패했을 경우 기본값 처리 (예: 0.0 또는 null)
+        	dto.setLatitude(0.0);
+        	dto.setLongitude(0.0);
+        }
+        CarRepairDAO carRepairDAO = sqlSession.getMapper(CarRepairDAO.class);
+        log.info("UserService register CarRepairDTO=>"+dto);
+		
 		carRepairDAO.insertShop(dto);
 	}
-	
+
 	@Override	//25.04.30 권준우 (API -> DB 최초 저장) 
 	public void saveInitialRepairShopData() {
 		log.info("@# saveInitialRepairShopData 시작");
@@ -127,8 +145,11 @@ public class CarRepairServiceImpl implements CarRepairService {
 						dto.setName(item.path("inspofcNm").asText());
 						dto.setRoad_address(item.path("rdnmadr").asText());
 						dto.setLot_address(item.path("lnmadr").asText());
-						dto.setLatitude(item.path("latitude").asText());
-						dto.setLongitude(item.path("longitude").asText());
+
+	                    // DTO 수정 String -> double
+	                    dto.setLatitude(JsonUtil.safeParseDouble(item, "latitude"));
+	            		dto.setLongitude(JsonUtil.safeParseDouble(item, "longitude"));
+	            		
 						dto.setRegistration_date(item.path("bizrnoDate").asText());
 						dto.setOpen_time(item.path("operOpenHm").asText());
 						dto.setClose_time(item.path("operCloseHm").asText());
@@ -262,8 +283,11 @@ public class CarRepairServiceImpl implements CarRepairService {
 	                    dto.setName(item.path("inspofcNm").asText());
 	                    dto.setRoad_address(item.path("rdnmadr").asText());
 	                    dto.setLot_address(item.path("lnmadr").asText());
-	                    dto.setLatitude(item.path("latitude").asText());
-	                    dto.setLongitude(item.path("longitude").asText());
+
+	                    // DTO 수정 String -> double
+	                    dto.setLatitude(JsonUtil.safeParseDouble(item, "latitude"));
+	            		dto.setLongitude(JsonUtil.safeParseDouble(item, "longitude"));
+	                    
 	                    dto.setRegistration_date(item.path("bizrnoDate").asText());
 	                    dto.setOpen_time(item.path("operOpenHm").asText());
 	                    dto.setClose_time(item.path("operCloseHm").asText());
