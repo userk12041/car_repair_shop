@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.boot.dao.CarRepairDAO;
 import com.boot.dto.CarRepairDTO;
+import com.boot.service.CarRepairService;
 
 @RestController
 @RequestMapping("/api/repairShops")
@@ -39,4 +40,9 @@ public class CarRepairApiController {
     public List<CarRepairDTO> searchShops(@RequestParam String keyword) {
         return carRepairDAO.listSearchByName(keyword);
     }
+    @GetMapping("/api/repairShops/search")
+    public List<CarRepairDTO> searchShops(@RequestParam String keyword, @RequestParam(defaultValue = "recent") String sort) {
+        return CarRepairService.search(keyword, sort);
+    }
+
 }
