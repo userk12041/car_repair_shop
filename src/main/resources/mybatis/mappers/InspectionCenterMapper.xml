@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.boot.dao.InspectionCenterDAO">
+
+	<insert id="insert" parameterType="com.boot.dto.InspectionCenterDTO">
+        INSERT INTO inspection_center (
+            name, type, road_address, lot_address, latitude, longitude,
+            tel, oper_time, lane_count, engineer_count,
+            new_insp_yn, fdrm_insp_yn, tuning_insp_yn, temp_insp_yn, repair_insp_yn,
+            exhstGas_insp_yn, taxi_meter_yn, registration_date
+        ) VALUES (
+            #{name}, #{type}, #{road_address}, #{lot_address}, #{latitude}, #{longitude},
+            #{tel}, #{oper_time}, #{lane_count}, #{engineer_count},
+            #{new_insp_yn}, #{fdrm_insp_yn}, #{tuning_insp_yn}, #{temp_insp_yn}, #{repair_insp_yn},
+            #{exhstGas_insp_yn}, #{taxi_meter_yn}, #{registration_date}
+        )
+    </insert>
+    
+    <select id="findByNameAndDate" resultType="com.boot.dto.InspectionCenterDTO">
+	  SELECT * FROM inspection_center
+	  WHERE name = #{name}
+	    AND registration_date = #{registration_date}
+	</select>
+
+	<update id="update" parameterType="com.boot.dto.InspectionCenterDTO">
+	  UPDATE inspection_center
+	  SET
+	    type = #{type},
+	    road_address = #{road_address},
+	    lot_address = #{lot_address},
+	    latitude = #{latitude},
+	    longitude = #{longitude},
+	    tel = #{tel},
+	    oper_time = #{oper_time},
+	    lane_count = #{lane_count},
+	    engineer_count = #{engineer_count},
+	    new_insp_yn = #{new_insp_yn},
+	    fdrm_insp_yn = #{fdrm_insp_yn},
+	    tuning_insp_yn = #{tuning_insp_yn},
+	    temp_insp_yn = #{temp_insp_yn},
+	    repair_insp_yn = #{repair_insp_yn},
+	    exhstGas_insp_yn = #{exhstGas_insp_yn},
+	    taxi_meter_yn = #{taxi_meter_yn}
+	  WHERE id = #{id}
+	</update>
+
+	<select id="selectAll" resultType="com.boot.dto.InspectionCenterDTO">
+		select * from inspection_center
+	</select>
+</mapper>

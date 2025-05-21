@@ -80,7 +80,7 @@ public class CarRepairServiceImpl implements CarRepairService {
 		return carRepairDAO.countSearchResults(name);
 	}
 
-	@Override	//25.04.29 권준우
+	@Override
 	public void insertShop(CarRepairDTO dto) {
 		 // 주소 -> 위도, 경도 변환
         double[] latlng = GeoUtil.getLatLngFromAddress(dto.getRoad_address());
