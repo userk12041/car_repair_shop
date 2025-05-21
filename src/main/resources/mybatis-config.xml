@@ -10,5 +10,6 @@
         <mapper resource="mybatis/mappers/ReviewMapper.xml"/>
         <mapper resource="mybatis/mappers/RequestMapper.xml"/>
         <mapper resource="mybatis/mappers/favoriteMapper.xml"/>
+        <mapper resource="mybatis/mappers/InspectionCenterMapper.xml"/>
     </mappers>
 </configuration>

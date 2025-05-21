@@ -51,7 +51,7 @@ public class ReviewController {
         return "redirect:/repairShop/view?id=" + repairShopId;
     }
     
-    @PostMapping("/view/delete")
+    @PostMapping("/review/delete")
     public String deleteReview(@RequestParam("id") int reviewId, @RequestParam("repairShopId") int repairShopId) {
         reviewService.deleteReview(reviewId);
         return "redirect:/repairShop/view?id=" + repairShopId; // 삭제 후, 해당 업체의 상세 페이지로 리다이렉트

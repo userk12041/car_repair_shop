@@ -16,6 +16,6 @@ public class RequestDTO {
 	private String open_time;
 	private String close_time;
 	private String tel_number;
-	private int request_user_id;
+	private String request_user_id;
 	private String status; // PENDING, APPROVED, REJECTED
 }

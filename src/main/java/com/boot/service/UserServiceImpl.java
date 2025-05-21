@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.boot.dao.UserDAO;
 import com.boot.dto.UserDTO;
+import com.boot.util.GeoUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service("UserService")
 public class UserServiceImpl implements UserService {
 
@@ -15,7 +19,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(UserDTO userDTO) {
+        // 주소 -> 위도, 경도 변환
+        double[] latlng = GeoUtil.getLatLngFromAddress(userDTO.getRegion());
+
+        if (latlng != null) {
+            userDTO.setLatitude(latlng[0]); // 위도
+            userDTO.setLongitude(latlng[1]); // 경도
+        } else {
+            // 실패했을 경우 기본값 처리 (예: 0.0 또는 null)
+            userDTO.setLatitude(0.0);
+            userDTO.setLongitude(0.0);
+        }
         UserDAO userDao = sqlSession.getMapper(UserDAO.class);
+        log.info("UserService register userDTO=>"+userDTO);
         userDao.register(userDTO);		
     }
 

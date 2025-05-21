@@ -169,5 +169,10 @@
 	    SELECT * FROM repair_shop
 	    WHERE name LIKE CONCAT('%', #{keyword}, '%')
 	</select>
+	
+	<!--조회수 업데이트-->
+	<update id="incrementViewCount" parameterType="int">
+	    UPDATE repair_shop SET view_count = view_count + 1 WHERE id = #{id}
+	</update>
 
 </mapper>

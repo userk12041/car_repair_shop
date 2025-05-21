@@ -2,6 +2,8 @@ package com.boot.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import com.boot.dto.RequestDTO;
 import com.boot.dto.CarRepairDTO;
 import com.boot.service.CarRepairService;
@@ -32,7 +34,10 @@ public class RequestController {
 
 	// 신청 등록 처리
 	@PostMapping("/repairShop/request")
-	public String submitRequest(RequestDTO dto, Model model) {
+	public String submitRequest(RequestDTO dto, HttpSession session, Model model) {
+		log.info("@# 신청 접수: " + dto.toString());
+		String id = (String) session.getAttribute("loginId");
+		dto.setRequest_user_id(id);
 		log.info("@# 신청 접수: " + dto.toString());
 		requestService.submitRequest(dto);
 		model.addAttribute("msg", "정비소 신청이 완료되었습니다.");

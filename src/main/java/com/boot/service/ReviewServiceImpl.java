@@ -38,6 +38,11 @@ public class ReviewServiceImpl implements ReviewService {
         dao.updateReview(review);
     }
 
+	@Override
+	public boolean hasReview(int shopId, String userId) {
+		ReviewDAO dao = sqlSession.getMapper(ReviewDAO.class);
+		return dao.checkReviewByUserAndShop(shopId, userId);
+	}
 }
 
 

@@ -21,7 +21,7 @@ public interface CarRepairDAO {
         );
     
     //25.05.01 김용철 검색 리스트
-    List<CarRepairDTO> listSearchByName(@Param("keyword") String keyword);	
+    List<CarRepairDTO> listSearchByName(@Param("keyword") String keyword);
     
     //25.04.29 권준우
     List<CarRepairDTO> findAllPaged(@Param("startRow") int startRow, @Param("rowCount") int rowCount);
@@ -46,5 +46,7 @@ public interface CarRepairDAO {
 	
 	List<CarRepairDTO> findByNameAndRoadAddress(@Param("name") String name, @Param("road_address") String road_address);	// API 갱신
 	int updateShop(CarRepairDTO dto);	// 정비소 수정 (API 갱신용)
+	
+	void incrementViewCount(int id); // 조회수 업데이트
 	
 }
