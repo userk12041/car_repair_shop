@@ -20,4 +20,5 @@ public class CarRepairDTO {
 	private String close_time;	
 	private String tel_number;	
 	
+	
 }
