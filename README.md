@@ -57,3 +57,25 @@ CREATE TABLE repair_shop_request (
    FOREIGN KEY (`request_user_id`) REFERENCES `user`(`userid`) ON DELETE CASCADE,
    status VARCHAR(20) DEFAULT 'PENDING' -- PENDING, APPROVED, REJECTED
 );
+
+CREATE TABLE inspection_center (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    type VARCHAR(20),
+    road_address VARCHAR(255),
+    lot_address VARCHAR(255),
+    latitude DOUBLE,
+    longitude DOUBLE,
+    tel VARCHAR(30),
+    oper_time VARCHAR(100), 
+    lane_count INT, 
+    engineer_count INT, 
+    new_insp_yn CHAR(1),
+    fdrm_insp_yn CHAR(1), 
+    tuning_insp_yn CHAR(1),
+    temp_insp_yn CHAR(1), 
+    repair_insp_yn CHAR(1),
+    exhstGas_insp_yn CHAR(1),
+    taxi_meter_yn CHAR(1), 
+    registration_date DATE
+);
