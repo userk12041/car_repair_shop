@@ -26,4 +26,9 @@
       </otherwise>
     </choose>
   </select>
+  
+  <update id="favoriteViewCount" parameterType="int">
+	    UPDATE repair_shop SET view_count = view_count + 1 WHERE id = #{id}
+	</update>
+	
 </mapper>
