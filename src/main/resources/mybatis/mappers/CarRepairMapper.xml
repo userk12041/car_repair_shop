@@ -174,5 +174,45 @@
 	<update id="incrementViewCount" parameterType="int">
 	    UPDATE repair_shop SET view_count = view_count + 1 WHERE id = #{id}
 	</update>
+	
+	<!--test-->
+	<select id="findShopsWithRating" resultType="com.boot.dto.CarRepairDTO">
+	  SELECT
+	    rs.*,
+	    IFNULL(AVG(r.rating), 0) AS avg_rating
+	  FROM repair_shop rs
+	  LEFT JOIN review r ON rs.id = r.repairShopId
+	  <where>
+	    <if test="keyword != null and keyword != ''">
+	      AND rs.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	    <!-- 지역 범위 조건 필요시 아래 주석 해제 -->
+	    <!--
+	    <if test="swLat != null and neLat != null and swLng != null and neLng != null">
+	      AND rs.latitude BETWEEN #{swLat} AND #{neLat}
+	      AND rs.longitude BETWEEN #{swLng} AND #{neLng}
+	    </if>
+	    -->
+	  </where>
+	  GROUP BY rs.id
+	  <choose>
+	    <when test="sort == 'name'">
+	      ORDER BY rs.name ASC
+	    </when>
+	    <when test="sort == 'view_count'">
+	      ORDER BY rs.view_count DESC
+	    </when>
+	    <when test="sort == 'rating'">
+	      ORDER BY avg_rating DESC
+	    </when>
+<!--	    <otherwise>
+	      ORDER BY rs.registration_date DESC
+	    </otherwise>-->
+	    <otherwise>
+	      ORDER BY rs.id
+	    </otherwise>
+	  </choose>
+	</select>
+
 
 </mapper>
