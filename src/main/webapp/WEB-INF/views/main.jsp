@@ -90,12 +90,12 @@
 
   <div class="container">
     <div class="list-panel" id="shopList">
-      <h2 style="text-align: center;">전국 자동차 정비업체</h2>
-      <div class="search-bar">
+    <!--  <h2 style="text-align: center;">전국 자동차 정비업체</h2>-->
+<!--      <div class="search-bar">
         <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
         <button id="searchBtn" type="button">🔍</button>
         <button id="refreshBtn" type="button">🔄</button>
-      </div>
+      </div>-->
     </div>
     <div class="map-panel">
       <div id="map" style="width:100%; height:100%;"></div>
@@ -137,7 +137,7 @@
       return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     function bindSearchEvents() {
-      $('#searchBtn').off().on('click', searchShops);
+      $('#searchBtn').off().on('click', loadMarkers);
       $('#searchKeyword').off().on('keydown', function (e) {
         if (e.key === 'Enter') searchShops();
       });
@@ -145,6 +145,9 @@
         isSearchMode = false;
         loadMarkers();
       });
+	  $('#sortOption').off().on('change', function() {
+	    loadMarkers();
+	  });
     }
     function closeInfoWindow() {
       if (currentInfoWindow) {
@@ -153,26 +156,49 @@
     }
     function loadMarkers() {
       const bounds = map.getBounds();
+	  console.log(bounds.toString());
       const sw = bounds.getSouthWest();
       const ne = bounds.getNorthEast();
       const swLat = sw.getLat();
       const swLng = sw.getLng();
       const neLat = ne.getLat();
       const neLng = ne.getLng();
+	  const keyword = $('#searchKeyword').val();
+	  const sort = $('#sortOption').val();
       clusterer.clear();
       $('#shopList').html(`
         <h2 style="text-align:center;">전국 자동차 정비업체</h2>
         <div class="search-bar">
-          <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+		  <input type="text" id="searchKeyword" value="${keyword}" placeholder="검색어를 입력하세요">
           <button id="searchBtn" type="button">🔍</button>
           <button id="refreshBtn" type="button">🔄</button>
+		  <select id="sortOption" style="margin-left: 10px; padding: 5px;">
+		         <option value="">정렬 선택</option>
+		         <option value="name">이름</option>
+		         <option value="view_count">조회수</option>
+		         <option value="rating">평점</option>
+		       </select>
         </div>
       `);
+	  $('#sortOption').val(sort);
+	  $('#searchKeyword').val(keyword);
       bindSearchEvents();
+	  console.log("keyword : "+keyword+" sort : "+sort);
+	  const requestData = {
+		swLat: swLat,
+		swLng: swLng,
+		neLat: neLat,
+		neLng: neLng,
+		sort: sort,
+		keyword: keyword
+	  }
       $.ajax({
-        url: `/api/repairShops?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}`,
+        url: "/api/repairShops",
         method: 'GET',
+		data: requestData,
+		dataType: "json",
         success: function (data) {
+		/*console.log(data);*/
           const newMarkers = [];
           const limitedData = data.slice(0, 2000);
           limitedData.forEach((shop, index) => {
@@ -181,6 +207,8 @@
                 '<div class="shop-card" data-index="' + index + '">' +
                 '<h3>' + escapeHtml(shop.name) + '</h3>' +
                 '<p>' + escapeHtml(shop.road_address) + '</p>' +
+				'<p>평점: ' + (shop.avg_rating ? shop.avg_rating.toFixed(1) : '평점 없음') + ' ⭐</p>' +
+				'<p>조회수: ' + (shop.view_count != null ? shop.view_count : 0) + '</p>' +
                 '</div>'
               );
             }

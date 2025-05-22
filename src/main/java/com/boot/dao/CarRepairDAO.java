@@ -1,9 +1,11 @@
 package com.boot.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.boot.dto.CarRepairDTO;
 
@@ -48,5 +50,9 @@ public interface CarRepairDAO {
 	int updateShop(CarRepairDTO dto);	// 정비소 수정 (API 갱신용)
 	
 	void incrementViewCount(int id); // 조회수 업데이트
+	
+	// test
+    List<CarRepairDTO> findShopsWithRating(Map<String, Object> params);
+
 	
 }

@@ -19,6 +19,8 @@ public class CarRepairDTO {
 	private String open_time;
 	private String close_time;	
 	private String tel_number;
-	private int viewCount;
+	private int view_count;
 	
+	// review의 평점 평균값 받아오기 위한 컴럼, repair_shop의 컬럼 아님
+	private Double avg_rating;
 }

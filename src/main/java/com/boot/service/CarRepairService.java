@@ -1,6 +1,7 @@
 package com.boot.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.boot.dto.CarRepairDTO;
 import com.boot.dto.SyncResultDTO;
@@ -27,4 +28,7 @@ public interface CarRepairService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	// test
+	List<CarRepairDTO> findShopsWithRating(Map<String, Object> params);
 }
