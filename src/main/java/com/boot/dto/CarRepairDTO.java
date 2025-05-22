@@ -23,4 +23,5 @@ public class CarRepairDTO {
 	
 	// review의 평점 평균값 받아오기 위한 컴럼, repair_shop의 컬럼 아님
 	private Double avg_rating;
+
 }
