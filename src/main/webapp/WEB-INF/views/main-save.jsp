@@ -148,26 +148,14 @@
 <body>
 
   <div class="container">
-	<div class="list-panel" id="shopList">
-	  <h2 style="text-align:center;">전국 자동차 정비업체</h2>
-	  <div class="search-bar">
-	    <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
-	    <button id="searchBtn" type="button">🔍</button>
-	    <button id="refreshBtn" type="button">🔄</button>
-	  </div>
-	  <div style="margin-top: 10px;">
-	    <select id="sortOption" style="margin-left: 10px; padding: 5px;">
-	      <option value="">정렬 선택</option>
-	      <option value="name">이름</option>
-	      <option value="view_count">조회수</option>
-	      <option value="rating">평점</option>
-	    </select>
-	  </div>
-
-	  <div id="shopListContent" style="margin-top: 15px;">
-	    <!-- AJAX로 받은 업체 리스트만 여기서 갱신 -->
-	  </div>
-	</div>
+    <div class="list-panel" id="shopList">
+    <!--  <h2 style="text-align: center;">전국 자동차 정비업체</h2>-->
+<!--      <div class="search-bar">
+        <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+        <button id="searchBtn" type="button">🔍</button>
+        <button id="refreshBtn" type="button">🔄</button>
+      </div>-->
+    </div>
     <div class="map-panel">
       <div id="map" style="width:100%; height:100%;"></div>
     </div>
@@ -239,14 +227,26 @@
 	  const keyword = $('#searchKeyword').val();
 	  const sort = $('#sortOption').val();
       clusterer.clear();
-	  
-	  if (!$('#shopListContent').length) {
-	    // #shopListContent 없으면 위처럼 HTML 생성 필요 (최초 로딩 시만)
-	  }
-	  // 이벤트 바인딩
-      //bindSearchEvents();
+      $('#shopList').html(`
+        <h2 style="text-align:center;">전국 자동차 정비업체</h2>
+        <div class="search-bar">
+		  <input type="text" id="searchKeyword" value="${keyword}" placeholder="검색어를 입력하세요">
+          <button id="searchBtn" type="button">🔍</button>
+          <button id="refreshBtn" type="button">🔄</button>
+        </div>
+	  <div style="margin-top: 10px;">
+		  <select id="sortOption" style="margin-left: 10px; padding: 5px;">
+	         <option value="">정렬 선택</option>
+	         <option value="name">이름</option>
+	         <option value="view_count">조회수</option>
+	         <option value="rating">평점</option>
+	       </select>
+	   </div>
+      `);
+	  $('#sortOption').val(sort);
+	  $('#searchKeyword').val(keyword);
+      bindSearchEvents();
 	  console.log("keyword : "+keyword+" sort : "+sort);
-	  
 	  const requestData = {
 		swLat: swLat,
 		swLng: swLng,
@@ -261,14 +261,13 @@
 		data: requestData,
 		dataType: "json",
         success: function (data) {
-			$('#shopListContent').empty();  // 기존 리스트만 초기화
 		/*console.log(data);*/
           const newMarkers = [];
           const limitedData = data.slice(0, 2000);
           limitedData.forEach((shop, index) => {
             if (index < 100) {
 				const isBookmarked = shop.bookmarked === true;
-              $('#shopListContent').append(
+              $('#shopList').append(
                 '<div class="shop-card" data-index="' + index + '">' +
                 '<h3>' + escapeHtml(shop.name) + '</h3>' +
                 '<p>' + escapeHtml(shop.road_address) + '</p>' +
@@ -317,9 +316,7 @@
             newMarkers.push({ marker, infowindow });
           });
           clusterer.addMarkers(newMarkers.map(m => m.marker));
-		  
-		  
-           $('#shopListContent').off('click', '.shop-card').on('click', '.shop-card', function () {
+          $('#shopList').on('click', '.shop-card', function () {
             const index = $(this).data('index');
             const { marker, infowindow } = newMarkers[index];
             isProgrammaticMove = true;
@@ -330,7 +327,7 @@
           });
 		  
 		  // ✅ 찜 버튼 바인딩도 여기로 옮기기
-		  $('#shopListContent').off('click', '.bookmark-btn').on('click', '.bookmark-btn', function (e) {
+		  $('#shopList').off('click', '.bookmark-btn').on('click', '.bookmark-btn', function (e) {
 		    e.stopPropagation(); // 카드 클릭 이벤트 중단
 		    const shopId = $(this).data('id');
 		    const $btn = $(this);

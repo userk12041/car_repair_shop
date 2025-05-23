@@ -33,7 +33,6 @@ public class BookmarkController {
 	    }
 	    log.info("controller");
 	    boolean isBookmarked = bookmarkService.toggleBookmark(userId, shopId);
-	    log.info("controller service 다음");
 	    result.put("success", true);
 	    result.put("bookmarked", isBookmarked);
 	    return result;

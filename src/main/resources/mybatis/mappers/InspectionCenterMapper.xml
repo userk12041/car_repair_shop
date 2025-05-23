@@ -44,6 +44,7 @@
 	    repair_insp_yn = #{repair_insp_yn},
 	    exhstGas_insp_yn = #{exhstGas_insp_yn},
 	    taxi_meter_yn = #{taxi_meter_yn}
+	    registration_date = #{registration_date}
 	  WHERE id = #{id}
 	</update>
 

@@ -17,6 +17,14 @@
         <th>이름</th>
         <th>주소(도로명)</th>
         <th>전화번호</th>
+        <th>운영시간</th>
+        <th>신규검사</th>
+        <th>정기검사</th>
+        <th>튜닝검사</th>
+        <th>임시검사</th>
+        <th>수리검사</th>
+        <th>배출가스정밀검사</th>
+        <th>택시미터검정</th>
         <th>등록일</th>
     </tr>
     </thead>
@@ -27,12 +35,19 @@
             <td>${item.name}</td>
             <td>${item.road_address}</td>
             <td>${item.tel}</td>
+            <td>${item.oper_time}</td>
+            <td>${item.new_insp_yn}</td>
+            <td>${item.fdrm_insp_yn}</td>
+            <td>${item.tuning_insp_yn}</td>
+            <td>${item.temp_insp_yn}</td>
+            <td>${item.repair_insp_yn}</td>
+            <td>${item.exhstGas_insp_yn}</td>
+            <td>${item.taxi_meter_yn}</td>
             <td>${item.registration_date}</td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
-
 <script>
     $('#syncBtn').click(function() {
         $.ajax({
