@@ -89,3 +89,25 @@ CREATE TABLE bookmark (
     CONSTRAINT fk_bookmark_repair_shop FOREIGN KEY (repair_shop_id) REFERENCES repair_shop(id) ON DELETE CASCADE,
     UNIQUE KEY unique_user_shop (user_id, repair_shop_id)  -- 중복 찜 방지
 );
+
+CREATE TABLE review_insp (
+  id int AUTO_INCREMENT,
+  insp_center_id int,
+  userId varchar(50),
+  rating int NOT NULL,
+  content text,
+  createdAt datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`insp_center_id`) REFERENCES `inspection_center`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`userId`) REFERENCES `user`(`userid`) ON DELETE CASCADE,
+  CONSTRAINT unique_user_insp_review UNIQUE (userId, insp_center_id)
+);
+
+CREATE TABLE bookmark_insp (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    insp_center_id INT NOT NULL,
+    CONSTRAINT fk_bookmark_insp_user FOREIGN KEY (user_id) REFERENCES user(userid) ON DELETE CASCADE,
+    CONSTRAINT fk_bookmark_insp_cneter FOREIGN KEY (insp_center_id) REFERENCES inspection_center(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_shop (user_id, insp_center_id)  -- 중복 찜 방지
+);
