@@ -179,9 +179,20 @@
 	<select id="findShopsWithRating" resultType="com.boot.dto.CarRepairDTO">
 	  SELECT
 	    rs.*,
-	    IFNULL(AVG(r.rating), 0) AS avg_rating
+	    IFNULL(AVG(r.rating), 0) AS avg_rating,
+	    <!--북마크 쿼리-->
+	    CASE 
+	      WHEN b.user_id IS NOT NULL THEN TRUE
+	      ELSE FALSE
+	    END AS bookmarked
+	    <!--북마크-->
 	  FROM repair_shop rs
 	  LEFT JOIN review r ON rs.id = r.repairShopId
+	  <!--북마크 쿼리-->
+	  LEFT JOIN bookmark b 
+	    ON rs.id = b.repair_shop_id 
+	    AND b.user_id = #{userId}
+	    <!--북마크-->
 	  <where>
 	    <if test="keyword != null and keyword != ''">
 	      AND rs.name LIKE CONCAT('%', #{keyword}, '%')

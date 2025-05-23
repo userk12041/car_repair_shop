@@ -83,6 +83,39 @@
     margin: 0;
     font-size: 16px;
   }
+  .shop-card .bottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .shop-card .left {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .shop-card .right {
+    font-size: 14px;
+  }
+  .bookmark-btn.styled {
+    background-color: #fffbe6;
+    border: 1px solid #f0c420;
+    color: #d48806;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .bookmark-btn.styled:hover {
+    background-color: #fff1b8;
+    border-color: #faad14;
+    color: #fa8c16;
+    transform: scale(1.05);
+  }
 </style>
 </head>
 
@@ -142,7 +175,9 @@
         if (e.key === 'Enter') searchShops();
       });
       $('#refreshBtn').off().on('click', function () {
-        isSearchMode = false;
+        /*isSearchMode = false;*/
+		$('#searchKeyword').val('');
+		$('#sortOption').val('');
         loadMarkers();
       });
 	  $('#sortOption').off().on('change', function() {
@@ -203,12 +238,21 @@
           const limitedData = data.slice(0, 2000);
           limitedData.forEach((shop, index) => {
             if (index < 100) {
+				const isBookmarked = shop.bookmarked === true;
               $('#shopList').append(
                 '<div class="shop-card" data-index="' + index + '">' +
                 '<h3>' + escapeHtml(shop.name) + '</h3>' +
                 '<p>' + escapeHtml(shop.road_address) + '</p>' +
-				'<p>평점: ' + (shop.avg_rating ? shop.avg_rating.toFixed(1) : '평점 없음') + ' ⭐</p>' +
-				'<p>조회수: ' + (shop.view_count != null ? shop.view_count : 0) + '</p>' +
+				'<div class="bottom">'
+				    +  '<div class="left">'
+				      +  '👁️'+ (shop.view_count != null ? shop.view_count : 0) + '&nbsp;'
+				      +  '⭐'+ (shop.avg_rating != null ? shop.avg_rating.toFixed(1) : '평점 없음') 
+				    +  '</div>'
+				   +   '<div class="right">'
+				      +  '<button class="bookmark-btn styled" data-id="' + shop.id + '"					' +
+					      (isBookmarked ? 'style="background-color: #ffe58f; border-color: #faad14; color: #fa541c;"' : '') +
+					      '>' + (isBookmarked ? '⭐ 찜됨' : '⭐ 찜') + '</button>'
+				   + '</div>'+
                 '</div>'
               );
             }
@@ -253,80 +297,40 @@
             infowindow.open(map, marker);
             currentInfoWindow = infowindow;
           });
+		  
+		  // ✅ 찜 버튼 바인딩도 여기로 옮기기
+		  $('#shopList').off('click', '.bookmark-btn').on('click', '.bookmark-btn', function (e) {
+		    e.stopPropagation(); // 카드 클릭 이벤트 중단
+		    const shopId = $(this).data('id');
+		    const $btn = $(this);
+
+		    $.ajax({
+		      url: '/bookmark/toggle',
+		      method: 'POST',
+		      data: { shopId },
+		      success: function (res) {
+		        if (res.success) {
+		          if (res.bookmarked) {
+		            $btn.text('⭐ 찜됨');
+		            $btn.css({ backgroundColor: '#ffe58f', borderColor: '#faad14', color: '#fa541c' });
+		          } else {
+		            $btn.text('⭐ 찜');
+		            $btn.removeAttr('style').addClass('styled');
+		          }
+		        } else {
+		          alert(res.message || "오류 발생");
+		        }
+		      },
+		      error: function () {
+		        alert("서버 오류가 발생했습니다.");
+		      }
+		    });
+		  });
         }
+
       });
     }
-    function searchShops() {
-      const keyword = $('#searchKeyword').val().trim();
-      if (!keyword) {
-        isSearchMode = false;
-        loadMarkers();
-        return;
-      }
-      isSearchMode = true;
-      clusterer.clear();
-      $('#shopList').html(`
-						<h2 style="text-align:center;">전국 자동차 정비업체</h2>
-						<div class="search-bar">
-						  <input type="text" id="searchKeyword" value="${keyword}" placeholder="검색어를 입력하세요">
-						  <button id="searchBtn" type="button">🔍</button>
-						  <button id="refreshBtn" type="button">🔄</button>
-						</div>
-						`);
-        bindSearchEvents();
-        $.ajax({
-          url: "/api/repairShops/search?keyword=" + encodeURIComponent(keyword),
-          method: 'GET',
-          success: function (data) {
-            const newMarkers = [];
-            const limitedData = data.slice(0, 500);
-            limitedData.forEach((shop, index) => {
-              $('#shopList').append(
-                '<div class="shop-card" data-index="' + index + '">' +
-                '<h3>' + escapeHtml(shop.name) + '</h3>' +
-                '<p>' + escapeHtml(shop.road_address) + '</p>' +
-                '</div>'
-              );
-              const content =
-                '<div style="padding: 12px; max-width: 280px; font-family: Arial, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; background: #fff; border: none;">' +
-                '<div style="font-size: 15px; font-weight: bold; color: #333; margin-bottom: 5px;">' + escapeHtml(shop.name) + '</div>' +
-                '<div style="font-size: 13px; color: #666; margin-bottom: 10px; line-height: 1.4;">' + escapeHtml(shop.road_address) + '</div>' +
-                '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-                '<a href="/repairShop/view?id=' + shop.id + '" ' +
-                'style="display: inline-block; padding: 8px 12px; background: #4CAF50; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; transition: background 0.3s;">' +
-                '상세보기' +
-                '</a>' +
-                '<a href="javascript:void(0)" onclick="closeInfoWindow()" ' +
-                'style="display: inline-block; padding: 8px 12px; background: #e74c3c; color: white; font-size: 12px; border-radius: 20px; text-decoration: none; margin-left: 8px; transition: background 0.3s;">' +
-                '닫기' +
-                '</a>' +
-                '</div>' +
-                '</div>';
-              const infowindow = new kakao.maps.InfoWindow({ content });
-              const marker = new kakao.maps.Marker({
-                position: new kakao.maps.LatLng(shop.latitude, shop.longitude),
-                title: shop.name
-              });
-              kakao.maps.event.addListener(marker, 'click', function () {
-                if (currentInfoWindow) currentInfoWindow.close();
-                infowindow.open(map, marker);
-                currentInfoWindow = infowindow;
-              });
-              newMarkers.push({ marker, infowindow });
-            });
-            clusterer.addMarkers(newMarkers.map(m => m.marker));
-            $('#shopList').on('click', '.shop-card', function () {
-              const index = $(this).data('index');
-              const { marker, infowindow } = newMarkers[index];
-              isProgrammaticMove = true;
-              map.setCenter(marker.getPosition());
-              if (currentInfoWindow) currentInfoWindow.close();
-              infowindow.open(map, marker);
-              currentInfoWindow = infowindow;
-            });
-          }
-        });
-      }
+
     </script>
   </body>
   </html>

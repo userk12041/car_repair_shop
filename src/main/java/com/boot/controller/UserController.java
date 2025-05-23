@@ -142,6 +142,21 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @GetMapping("/loginCheck")
+    @ResponseBody
+    public Map<String, Object> checkLogin(HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
 
+        // 예: 세션에서 로그인된 userId 가져오기
+        String userId = (String) session.getAttribute("loginId");
+
+        if (userId != null) {
+            response.put("isLoggedIn", true);
+            response.put("userId", userId);
+        } else {
+            response.put("isLoggedIn", false);
+        }
+        return response;
+    }
 
 }

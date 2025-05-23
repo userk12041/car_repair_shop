@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,9 +65,12 @@ public class CarRepairApiController {
         @RequestParam(required = false) Double swLat,
         @RequestParam(required = false) Double swLng,
         @RequestParam(required = false) Double neLat,
-        @RequestParam(required = false) Double neLng
+        @RequestParam(required = false) Double neLng,
+        HttpSession session
     ) {
-//    	log.info("Controller keyword={}, sort={},", keyword, sort);
+    	String userId = (String) session.getAttribute("loginId");
+    	if(userId == null) userId = "";
+    	log.info("Controller keyword={}, sort={}, userId={}", keyword, sort, userId);
         Map<String, Object> params = new HashMap<>();
         params.put("keyword", keyword);
         params.put("sort", sort);
@@ -73,6 +78,7 @@ public class CarRepairApiController {
         params.put("swLng", swLng);
         params.put("neLat", neLat);
         params.put("neLng", neLng);
+        params.put("userId", userId);
         return carRepairService.findShopsWithRating(params);
     }
 }
