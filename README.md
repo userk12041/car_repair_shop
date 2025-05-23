@@ -77,5 +77,15 @@ CREATE TABLE inspection_center (
     repair_insp_yn CHAR(1),
     exhstGas_insp_yn CHAR(1),
     taxi_meter_yn CHAR(1), 
-    registration_date DATE
+    registration_date DATE,
+    view_count int default 0
+);
+
+CREATE TABLE bookmark (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    repair_shop_id INT NOT NULL,
+    CONSTRAINT fk_bookmark_user FOREIGN KEY (user_id) REFERENCES user(userid) ON DELETE CASCADE,
+    CONSTRAINT fk_bookmark_repair_shop FOREIGN KEY (repair_shop_id) REFERENCES repair_shop(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_shop (user_id, repair_shop_id)  -- 중복 찜 방지
 );
