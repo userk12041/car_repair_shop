@@ -28,6 +28,8 @@
   }
   .list-panel {
     width: 30%;
+	min-width: 300px;  /* 최소 너비 */
+	max-width: 500px;  /* 최대 너비 */
     overflow-y: auto;
     background: var(--card-bg);
     padding: 20px;
@@ -115,6 +117,30 @@
     border-color: #faad14;
     color: #fa8c16;
     transform: scale(1.05);
+  }
+  
+  #sortOption {
+    width: 100px;
+    padding: 8px 12px;
+	margin-bottom:10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #sortOption:hover {
+    border-color: #888;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+
+  #sortOption:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0,123,255,0.5);
   }
 </style>
 </head>
@@ -207,13 +233,15 @@
 		  <input type="text" id="searchKeyword" value="${keyword}" placeholder="검색어를 입력하세요">
           <button id="searchBtn" type="button">🔍</button>
           <button id="refreshBtn" type="button">🔄</button>
-		  <select id="sortOption" style="margin-left: 10px; padding: 5px;">
-		         <option value="">정렬 선택</option>
-		         <option value="name">이름</option>
-		         <option value="view_count">조회수</option>
-		         <option value="rating">평점</option>
-		       </select>
         </div>
+	  <div style="margin-top: 10px;">
+		  <select id="sortOption" style="margin-left: 10px; padding: 5px;">
+	         <option value="">정렬 선택</option>
+	         <option value="name">이름</option>
+	         <option value="view_count">조회수</option>
+	         <option value="rating">평점</option>
+	       </select>
+	   </div>
       `);
 	  $('#sortOption').val(sort);
 	  $('#searchKeyword').val(keyword);
@@ -251,7 +279,7 @@
 				   +   '<div class="right">'
 				      +  '<button class="bookmark-btn styled" data-id="' + shop.id + '"					' +
 					      (isBookmarked ? 'style="background-color: #ffe58f; border-color: #faad14; color: #fa541c;"' : '') +
-					      '>' + (isBookmarked ? '⭐ 찜됨' : '⭐ 찜') + '</button>'
+					      '>' + (isBookmarked ? '⭐' : '⭐') + '</button>'
 				   + '</div>'+
                 '</div>'
               );
@@ -311,10 +339,10 @@
 		      success: function (res) {
 		        if (res.success) {
 		          if (res.bookmarked) {
-		            $btn.text('⭐ 찜됨');
+		            $btn.text('⭐');
 		            $btn.css({ backgroundColor: '#ffe58f', borderColor: '#faad14', color: '#fa541c' });
 		          } else {
-		            $btn.text('⭐ 찜');
+		            $btn.text('⭐');
 		            $btn.removeAttr('style').addClass('styled');
 		          }
 		        } else {
