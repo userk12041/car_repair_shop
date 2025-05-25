@@ -84,10 +84,9 @@ CREATE TABLE inspection_center (
 CREATE TABLE bookmark (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL,
-    repair_shop_id INT NOT NULL,
-    CONSTRAINT fk_bookmark_user FOREIGN KEY (user_id) REFERENCES user(userid) ON DELETE CASCADE,
-    CONSTRAINT fk_bookmark_repair_shop FOREIGN KEY (repair_shop_id) REFERENCES repair_shop(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_shop (user_id, repair_shop_id)  -- 중복 찜 방지
+    shop_id INT NOT NULL,
+    shop_type ENUM('repair','inspection') NOT NULL,
+    CONSTRAINT unique_user_shop_type UNIQUE(user_id, shop_id, shop_type)
 );
 
 CREATE TABLE review_insp (
@@ -101,13 +100,4 @@ CREATE TABLE review_insp (
   FOREIGN KEY (`insp_center_id`) REFERENCES `inspection_center`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`userId`) REFERENCES `user`(`userid`) ON DELETE CASCADE,
   CONSTRAINT unique_user_insp_review UNIQUE (userId, insp_center_id)
-);
-
-CREATE TABLE bookmark_insp (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    insp_center_id INT NOT NULL,
-    CONSTRAINT fk_bookmark_insp_user FOREIGN KEY (user_id) REFERENCES user(userid) ON DELETE CASCADE,
-    CONSTRAINT fk_bookmark_insp_cneter FOREIGN KEY (insp_center_id) REFERENCES inspection_center(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_shop (user_id, insp_center_id)  -- 중복 찜 방지
 );
