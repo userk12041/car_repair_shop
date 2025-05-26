@@ -77,5 +77,27 @@ CREATE TABLE inspection_center (
     repair_insp_yn CHAR(1),
     exhstGas_insp_yn CHAR(1),
     taxi_meter_yn CHAR(1), 
-    registration_date DATE
+    registration_date DATE,
+    view_count int default 0
+);
+
+CREATE TABLE bookmark (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    shop_id INT NOT NULL,
+    shop_type ENUM('repair','inspection') NOT NULL,
+    CONSTRAINT unique_user_shop_type UNIQUE(user_id, shop_id, shop_type)
+);
+
+CREATE TABLE review_insp (
+  id int AUTO_INCREMENT,
+  insp_center_id int,
+  userId varchar(50),
+  rating int NOT NULL,
+  content text,
+  createdAt datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`insp_center_id`) REFERENCES `inspection_center`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`userId`) REFERENCES `user`(`userid`) ON DELETE CASCADE,
+  CONSTRAINT unique_user_insp_review UNIQUE (userId, insp_center_id)
 );
