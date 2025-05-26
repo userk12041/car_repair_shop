@@ -190,8 +190,9 @@
 	  LEFT JOIN review r ON rs.id = r.repairShopId
 	  <!--북마크 쿼리-->
 	  LEFT JOIN bookmark b 
-	    ON rs.id = b.repair_shop_id 
+	    ON rs.id = b.shop_id 
 	    AND b.user_id = #{userId}
+	    AND b.shop_type = 'repair'
 	    <!--북마크-->
 	  <where>
 	    <if test="keyword != null and keyword != ''">

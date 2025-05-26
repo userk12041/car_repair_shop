@@ -150,6 +150,14 @@
   <div class="container">
 	<div class="list-panel" id="shopList">
 	  <h2 style="text-align:center;">전국 자동차 정비업체</h2>
+	  <div style="margin-top: 10px;">
+	    <label>
+	      <input type="radio" name="shopType" value="repair" checked> 정비소
+	    </label>
+	    <label style="margin-left: 20px;">
+	      <input type="radio" name="shopType" value="inspection"> 검사소
+	    </label>
+	  </div>
 	  <div class="search-bar">
 	    <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
 	    <button id="searchBtn" type="button">🔍</button>
@@ -162,6 +170,16 @@
 	      <option value="view_count">조회수</option>
 	      <option value="rating">평점</option>
 	    </select>
+	  </div>
+	  <div id="inspectionOptions" style="display:none; margin-top: 10px; padding-left: 10px; border-left: 3px solid #3498db;">
+		<input type="checkbox" name="inspectionOption" value="new_inspection">신규검사</input>
+		<input type="checkbox" name="inspectionOption" value="structure_change">구조변경검사</input><br>
+		<input type="checkbox" name="inspectionOption" value="tuning">튜닝검사</input>
+		<input type="checkbox" name="inspectionOption" value="temporary">임시검사</input><br>
+		<input type="checkbox" name="inspectionOption" value="maintenance">정비검사</input>
+		<input type="checkbox" name="inspectionOption" value="emission">배출가스검사</input><br>
+		<input type="checkbox" name="inspectionOption" value="taximeter">택시미터기검사</input>
+
 	  </div>
 
 	  <div id="shopListContent" style="margin-top: 15px;">
@@ -202,6 +220,17 @@
       });
       loadMarkers();
       bindSearchEvents();
+	  $('input[name="shopType"]').on('change', function() {
+	    if ($(this).val() === 'inspection') {
+	      $('#inspectionOptions').slideDown();
+	    } else {
+	      $('#inspectionOptions').slideUp();
+	      // 검사소 옵션 체크박스 초기화 (선택 해제)
+	      $('#inspectionOptions input[type="checkbox"]').prop('checked', false);
+	    }
+	    // 선택 바뀔 때마다 데이터 다시 로딩 (필요하면)
+	    loadMarkers();
+	  });
     };
     function escapeHtml(text) {
       if (!text) return "";
@@ -216,6 +245,8 @@
         /*isSearchMode = false;*/
 		$('#searchKeyword').val('');
 		$('#sortOption').val('');
+		$('input[name="inspectionOption"]').prop('checked', false);
+
         loadMarkers();
       });
 	  $('#sortOption').off().on('change', function() {
@@ -238,6 +269,13 @@
       const neLng = ne.getLng();
 	  const keyword = $('#searchKeyword').val();
 	  const sort = $('#sortOption').val();
+	  const shopType = $('input[name="shopType"]:checked').val();
+	  const inspectionOptions = [];
+	  if (shopType === 'inspection') {
+	    $('input[name="inspectionOption"]:checked').each(function() {
+	      inspectionOptions.push($(this).val());
+	    });
+	  }
       clusterer.clear();
 	  
 	  if (!$('#shopListContent').length) {
@@ -253,16 +291,18 @@
 		neLat: neLat,
 		neLng: neLng,
 		sort: sort,
-		keyword: keyword
+		keyword: keyword,
+		shopType: shopType,
+		inspectionOptions: inspectionOptions
 	  }
       $.ajax({
         url: "/api/repairShops",
         method: 'GET',
 		data: requestData,
+		traditional: true,
 		dataType: "json",
         success: function (data) {
 			$('#shopListContent').empty();  // 기존 리스트만 초기화
-		/*console.log(data);*/
           const newMarkers = [];
           const limitedData = data.slice(0, 2000);
           limitedData.forEach((shop, index) => {
@@ -285,12 +325,16 @@
                 '</div>'
               );
             }
+			const detailUrl = shopType === 'inspection'
+			  ? '/inspectionCenter/view?id=' + shop.id
+			  : '/repairShop/view?id=' + shop.id;
+			  
             const content =
               '<div style="padding: 12px; max-width: 280px; font-family: Arial, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; background: #fff; border: none;">' +
               '<div style="font-size: 15px; font-weight: bold; color: #333; margin-bottom: 5px;">' + escapeHtml(shop.name) + '</div>' +
               '<div style="font-size: 13px; color: #666; margin-bottom: 10px; line-height: 1.4;">' + escapeHtml(shop.road_address) + '</div>' +
               '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-              '<a href="/repairShop/view?id=' + shop.id + '" ' +
+              '<a href="' + detailUrl + '" ' +
               'style="display: inline-block; padding: 8px 12px; background: #4CAF50; color: white; font-size: 12px; border-radius: 20px; text-decoration: none;">' +
               '상세보기' +
               '</a> | ' +
@@ -329,7 +373,6 @@
             currentInfoWindow = infowindow;
           });
 		  
-		  // ✅ 찜 버튼 바인딩도 여기로 옮기기
 		  $('#shopListContent').off('click', '.bookmark-btn').on('click', '.bookmark-btn', function (e) {
 		    e.stopPropagation(); // 카드 클릭 이벤트 중단
 		    const shopId = $(this).data('id');
@@ -338,7 +381,7 @@
 		    $.ajax({
 		      url: '/bookmark/toggle',
 		      method: 'POST',
-		      data: { shopId },
+		      data: { shopId, shopType },
 		      success: function (res) {
 		        if (res.success) {
 		          if (res.bookmarked) {

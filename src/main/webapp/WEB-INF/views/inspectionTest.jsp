@@ -8,7 +8,7 @@
 <body>
 <h2>검사소 리스트</h2>
 
-<button id="syncBtn">동기화</button>
+<button id="syncBtn">검사소 동기화</button>
 
 <table border="1" style="margin-top: 10px;">
     <thead>

@@ -23,7 +23,10 @@ public class BookmarkController {
 	
 	@PostMapping("/bookmark/toggle")
 	@ResponseBody
-	public Map<String, Object> toggleBookmark(@RequestParam int shopId, HttpSession session) {
+	public Map<String, Object> toggleBookmark(
+			@RequestParam int shopId,
+			@RequestParam String shopType,
+			HttpSession session) {
 		String userId = (String) session.getAttribute("loginId");
 	    Map<String, Object> result = new HashMap<>();
 	    if (userId == null) {
@@ -31,8 +34,8 @@ public class BookmarkController {
 	        result.put("message", "로그인이 필요합니다.");
 	        return result;
 	    }
-	    log.info("controller");
-	    boolean isBookmarked = bookmarkService.toggleBookmark(userId, shopId);
+	    log.info("bookmark");
+	    boolean isBookmarked = bookmarkService.toggleBookmark(userId, shopId, shopType);
 	    result.put("success", true);
 	    result.put("bookmarked", isBookmarked);
 	    return result;

@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.boot.dto.ReviewDTO;
 
 public interface ReviewDAO {
-	List<ReviewDTO> getReviewsByShopId(int repairShopId);
+	List<ReviewDTO> getReviewsByShopId(int ShopId);
 	void insertReview(ReviewDTO review);
     void deleteReview(int reviewId);
     void updateReview(ReviewDTO review);

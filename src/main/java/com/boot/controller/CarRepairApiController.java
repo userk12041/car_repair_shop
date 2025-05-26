@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boot.dao.CarRepairDAO;
 import com.boot.dto.CarRepairDTO;
+import com.boot.service.CarRapairInspectionService;
 import com.boot.service.CarRepairService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller 
 public class CarRepairApiController {
 
+
     @Autowired
     private CarRepairDAO carRepairDAO;
     @Autowired
     private CarRepairService carRepairService;
+    @Autowired
+    private CarRapairInspectionService carRapairInspectionService;
 
 //    @GetMapping("/api/repairShops")
 //    @ResponseBody
@@ -59,18 +63,26 @@ public class CarRepairApiController {
     // test
     @GetMapping("/api/repairShops")
     @ResponseBody
-    public List<CarRepairDTO> getRepairShopsWithRating(
+    public Object getRepairShopsWithRating(
         @RequestParam(required = false) String keyword,
         @RequestParam(required = false) String sort,
         @RequestParam(required = false) Double swLat,
         @RequestParam(required = false) Double swLng,
         @RequestParam(required = false) Double neLat,
         @RequestParam(required = false) Double neLng,
+        @RequestParam(required = false) String shopType,
+        @RequestParam(required = false) List<String> inspectionOptions,
         HttpSession session
     ) {
     	String userId = (String) session.getAttribute("loginId");
     	if(userId == null) userId = "";
     	log.info("Controller keyword={}, sort={}, userId={}", keyword, sort, userId);
+    	
+    	// 가져온 값들 출력
+        System.out.println("keyword = " + keyword);
+        System.out.println("shopType = " + shopType);
+        System.out.println("inspectionOptions = " + inspectionOptions);
+        
         Map<String, Object> params = new HashMap<>();
         params.put("keyword", keyword);
         params.put("sort", sort);
@@ -79,6 +91,13 @@ public class CarRepairApiController {
         params.put("neLat", neLat);
         params.put("neLng", neLng);
         params.put("userId", userId);
-        return carRepairService.findShopsWithRating(params);
+
+        if ("inspection".equals(shopType)) {
+        	params.put("inspectionOptions", inspectionOptions);
+            return carRapairInspectionService.findCenterWithRating(params); // List<InspectionCenterDTO>
+        } else {
+            return carRepairService.findShopsWithRating(params); // List<CarRepairDTO>
+        }    	
     }
+
 }

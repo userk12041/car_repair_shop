@@ -6,18 +6,18 @@
 <mapper namespace="com.boot.dao.BookmarkDAO">
 
 	<insert id="insertBookmark">
-        INSERT INTO bookmark (user_id, repair_shop_id)
-        VALUES (#{userId}, #{shopId})
+        INSERT INTO bookmark (user_id, shop_id, shop_type)
+        VALUES (#{userId}, #{shopId}, #{shopType})
     </insert>
 
     <delete id="deleteBookmark">
         DELETE FROM bookmark
-        WHERE user_id = #{userId} AND repair_shop_id = #{shopId}
+        WHERE user_id = #{userId} AND shop_id = #{shopId} AND shop_type = #{shopType}
     </delete>
 
     <select id="isBookmarked" resultType="boolean">
         SELECT COUNT(*) > 0 FROM bookmark
-        WHERE user_id = #{userId} AND repair_shop_id = #{shopId}
+        WHERE user_id = #{userId} AND shop_id = #{shopId} AND shop_type = #{shopType}
     </select>
 
 </mapper>

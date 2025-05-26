@@ -97,17 +97,26 @@
 <body>
 	<div id="shopMap"></div>
 	<div class="container">
-        <!-- 업체 정보 -->
-        <table class="info-box">
-            <caption>업체 상세 정보</caption>
-            <tr><th>업체명</th><td>${shop.name}</td></tr>
-            <tr><th>도로주소</th><td>${shop.road_address}</td></tr>
-            <tr><th>지번주소</th><td>${shop.lot_address}</td></tr>
-            <tr><th>등록일자</th><td>${shop.registration_date}</td></tr>
-            <tr><th>오픈시간</th><td>${shop.open_time}</td></tr>
-            <tr><th>마감시간</th><td>${shop.close_time}</td></tr>
-            <tr><th>전화번호</th><td>${shop.tel_number}</td></tr>
-        </table>
+		<!-- 검사소 정보 -->
+		<table class="info-box">
+		    <caption>검사소 상세 정보</caption>
+		    <tr><th>업체명</th><td>${shop.name}</td></tr>
+		    <tr><th>종류</th><td>${shop.type}</td></tr>
+		    <tr><th>도로주소</th><td>${shop.road_address}</td></tr>
+		    <tr><th>지번주소</th><td>${shop.lot_address}</td></tr>
+		    <tr><th>전화번호</th><td>${shop.tel}</td></tr>
+		    <tr><th>운영시간</th><td>${shop.oper_time}</td></tr>
+		    <tr><th>검사차로 수</th><td>${shop.lane_count}</td></tr>
+		    <tr><th>검사인원 수</th><td>${shop.engineer_count}</td></tr>
+		    <tr><th>신규검사</th><td>${shop.new_insp_yn}</td></tr>
+		    <tr><th>구조변경검사</th><td>${shop.fdrm_insp_yn}</td></tr>
+		    <tr><th>튜닝검사</th><td>${shop.tuning_insp_yn}</td></tr>
+		    <tr><th>임시검사</th><td>${shop.temp_insp_yn}</td></tr>
+		    <tr><th>정비검사</th><td>${shop.repair_insp_yn}</td></tr>
+		    <tr><th>배출가스검사</th><td>${shop.exhstGas_insp_yn}</td></tr>
+		    <tr><th>택시미터기검사</th><td>${shop.taxi_meter_yn}</td></tr>
+		    <tr><th>등록일자</th><td>${shop.registration_date}</td></tr>
+		</table>
 
         <!-- 리뷰 -->
         <div class="review-box">
@@ -120,7 +129,7 @@
 		    <div id="reviewForm" style="display: none; margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px;">
 		        <!-- <form id="reviewSubmitForm" method="post" action="/review/insert"> -->
 		        <form id="reviewSubmitForm" method="post" onsubmit="return submitReview(event)">
-		            <input type="hidden" name="repairShopId" value="${shop.id}" />
+		            <input type="hidden" name="insp_center_id" value="${shop.id}" />
 
 		            <label>별점:
 		                <select name="rating" class="stars" required>
@@ -174,7 +183,7 @@
 						</c:if>
                     </div>
 					<div id="review_content_${review.id}">${review.content}</div>
-					<!-- 수정 폼-->
+					<!-- 수정 폼 미완-->
 					<div id="editForm_${review.id}" class="review-edit-form">
 					    <form method="post" onsubmit="return submitReviewEdit(event, this, ${review.id});">
 					        <input type="hidden" name="id" value="${review.id}" />
@@ -279,7 +288,7 @@
 			    console.log("review delete formData => key:", JSON.stringify(key), ", value:", JSON.stringify(value));
 			}
 			
-		    fetch("/review/insert", {
+		    fetch("/review/insert/insp", {
 		        method: "POST",
 		        body: formData
 		    })
@@ -307,7 +316,7 @@
 			    console.log("review delete formData => key:", JSON.stringify(key), ", value:", JSON.stringify(value));
 			}
 			
-		    fetch("/review/update", {
+		    fetch("/review/update/insp", {
 		        method: "POST",
 		        body: formData
 		    })
@@ -345,7 +354,7 @@
 			    console.log("review delete formData => key:", JSON.stringify(key), ", value:", JSON.stringify(value));
 			}
 
-		    fetch("/review/delete", {
+		    fetch("/review/delete/insp", {
 		        method: "POST",
 		        body: formData
 		    })

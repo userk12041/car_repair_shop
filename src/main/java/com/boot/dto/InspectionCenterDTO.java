@@ -30,4 +30,11 @@ public class InspectionCenterDTO {
 	private String exhstGas_insp_yn;
 	private String taxi_meter_yn;
 	private Date registration_date;
+	private Integer view_count;
+	
+	// review의 평점 평균값 받아오기 위한 컴럼
+	private Double avg_rating;
+	// bookmarked 확인용
+	private boolean bookmarked;
+
 }

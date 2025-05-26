@@ -6,12 +6,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.boot.dao.InspectionCenterDAO;
+import com.boot.dto.CarRepairDTO;
 import com.boot.dto.InspectionCenterDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -108,5 +110,17 @@ public class CarRapairInspectionServiceImpl implements CarRapairInspectionServic
     public List<InspectionCenterDTO> getAllInspectionCenters(){
     	InspectionCenterDAO dao = sqlSession.getMapper(InspectionCenterDAO.class);
     	return dao.selectAll();
+    }
+	@Override
+	public void incrementViewCount(int id) {
+		InspectionCenterDAO dao = sqlSession.getMapper(InspectionCenterDAO.class);
+		dao.incrementViewCount(id);
+	}
+	
+    @Override
+    public List<CarRepairDTO> findCenterWithRating(Map<String, Object> params) {
+    	log.info("findCenterWithRating params: "+params);
+    	InspectionCenterDAO dao = sqlSession.getMapper(InspectionCenterDAO.class);
+        return dao.findCenterWithRating(params);
     }
 }

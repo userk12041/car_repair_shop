@@ -53,15 +53,7 @@ public class CarRepairController {
 		return "redirect:/main"; // 메인 페이지로 리다이렉트
 	}
 	
-    // test
-    @GetMapping("/inspection")
-	public String getInspection(Model model) throws IOException {
-    	inspectionService.getInspectionData();
-    	List<InspectionCenterDTO> list = inspectionService.getAllInspectionCenters();
-    	model.addAttribute("inspectionCenters",list);
-    	return "inspectionTest";
-    }
-    
+    // test    
     @GetMapping("/inspection/show")
 	public String showInspection(Model model) throws IOException {
     	List<InspectionCenterDTO> list = inspectionService.getAllInspectionCenters();

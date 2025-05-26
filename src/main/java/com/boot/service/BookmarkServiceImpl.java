@@ -16,28 +16,29 @@ public class BookmarkServiceImpl implements BookmarkService {
     private SqlSession sqlSession;
 
     @Override
-    public boolean toggleBookmark(String userId, int shopId) {
-    	log.info("service");
+    public boolean toggleBookmark(String userId, int shopId, String shopType) {
+    	log.info("toggleBookmark");
         BookmarkDAO dao = sqlSession.getMapper(BookmarkDAO.class);
         log.info("userId "+userId);
         log.info("shopId "+shopId);
-        boolean exists = dao.isBookmarked(userId, shopId);
+        log.info("shopType "+shopType);
+        boolean exists = dao.isBookmarked(userId, shopId, shopType);
         log.info("exists : "+exists);
         if (exists) {
         	log.info("service if");
-            dao.deleteBookmark(userId, shopId);
+            dao.deleteBookmark(userId, shopId, shopType);
             return false; // 북마크 해제됨
         } else {
         	log.info("service else");
-            dao.insertBookmark(userId, shopId);
+            dao.insertBookmark(userId, shopId, shopType);
             return true; // 북마크 추가됨
         }
     }
 
     @Override
-    public boolean isBookmarked(String userId, int shopId) {
+    public boolean isBookmarked(String userId, int shopId, String shopType) {
     	log.info("service isBookmarked");
         BookmarkDAO dao = sqlSession.getMapper(BookmarkDAO.class);
-        return dao.isBookmarked(userId, shopId);
+        return dao.isBookmarked(userId, shopId, shopType);
     }
 }

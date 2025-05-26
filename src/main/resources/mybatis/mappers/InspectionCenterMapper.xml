@@ -51,4 +51,123 @@
 	<select id="selectAll" resultType="com.boot.dto.InspectionCenterDTO">
 		select * from inspection_center
 	</select>
+	
+	<select id="getInspectionById" resultType="com.boot.dto.InspectionCenterDTO">
+	  SELECT * FROM inspection_center WHERE id = #{id}
+	</select>
+	
+	<update id="incrementViewCount" parameterType="int">
+	    UPDATE inspection_center SET view_count = view_count + 1 WHERE id = #{id}
+	</update>
+	
+	
+	<!--test-->
+	<!--<select id="findCenterWithRating" resultType="com.boot.dto.InspectionCenterDTO">
+	  SELECT
+	    ic.*,
+	    IFNULL(AVG(r.rating), 0) AS avg_rating,
+	    CASE 
+	      WHEN b.user_id IS NOT NULL THEN TRUE
+	      ELSE FALSE
+	    END AS bookmarked
+	  FROM inspection_center ic
+	  LEFT JOIN review_insp r ON ic.id = r.insp_center_id
+	  LEFT JOIN bookmark_insp b 
+	    ON ic.id = b.insp_center_id
+	    AND b.user_id = #{userId}
+	  <where>
+	    <if test="keyword != null and keyword != ''">
+	      AND ic.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	    
+	    <if test="swLat != null and neLat != null and swLng != null and neLng != null">
+	      AND ic.latitude BETWEEN #{swLat} AND #{neLat}
+	      AND ic.longitude BETWEEN #{swLng} AND #{neLng}
+	    </if>
+	    
+	  </where>
+	  GROUP BY ic.id
+	  <choose>
+	    <when test="sort == 'name'">
+	      ORDER BY ic.name ASC
+	    </when>
+	    <when test="sort == 'view_count'">
+	      ORDER BY ic.view_count DESC
+	    </when>
+	    <when test="sort == 'rating'">
+	      ORDER BY avg_rating DESC
+	    </when>
+	    <otherwise>
+	      ORDER BY ic.id
+	    </otherwise>
+	  </choose>
+	</select>-->
+
+	<select id="findCenterWithRating" resultType="com.boot.dto.InspectionCenterDTO">
+	  SELECT
+	    ic.*,
+	    IFNULL(AVG(r.rating), 0) AS avg_rating,
+	    CASE 
+	      WHEN b.user_id IS NOT NULL THEN TRUE
+	      ELSE FALSE
+	    END AS bookmarked
+	  FROM inspection_center ic
+	  LEFT JOIN review_insp r ON ic.id = r.insp_center_id
+	  LEFT JOIN bookmark b 
+	    ON ic.id = b.shop_id
+	    AND b.user_id = #{userId}
+	    AND b.shop_type = 'inspection'
+	  <where>
+	    <if test="keyword != null and keyword != ''">
+	      AND ic.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	    
+	    <if test="inspectionOptions != null and inspectionOptions.size() > 0">
+	      AND (
+	        <foreach collection="inspectionOptions" item="option" open="" close="" separator=" AND ">
+	          <choose>
+			    <when test="option == 'new_inspection'">
+			      ic.new_insp_yn = 'Y'
+			    </when>
+			    <when test="option == 'structure_change'">
+			      ic.fdrm_insp_yn = 'Y'
+			    </when>
+			    <when test="option == 'tuning'">
+			      ic.tuning_insp_yn = 'Y'
+			    </when>
+			    <when test="option == 'temporary'">
+			      ic.temp_insp_yn = 'Y'
+			    </when>
+			    <when test="option == 'maintenance'">
+			      ic.repair_insp_yn = 'Y'
+			    </when>
+			    <when test="option == 'emission'">
+			      ic.exhstGas_insp_yn = 'Y'
+			    </when>
+			    <when test="option == 'taximeter'">
+			      ic.taxi_meter_yn = 'Y'
+			    </when>
+			  </choose>
+	        </foreach>
+	      )
+	    </if>
+	  </where>
+	  GROUP BY ic.id
+	  <choose>
+	    <when test="sort == 'name'">
+	      ORDER BY ic.name ASC
+	    </when>
+	    <when test="sort == 'view_count'">
+	      ORDER BY ic.view_count DESC
+	    </when>
+	    <when test="sort == 'rating'">
+	      ORDER BY avg_rating DESC
+	    </when>
+	    <otherwise>
+	      ORDER BY ic.id
+	    </otherwise>
+	  </choose>
+	</select>
+
+
 </mapper>
